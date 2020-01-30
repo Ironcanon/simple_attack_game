@@ -166,7 +166,7 @@ def get_random_enemy():
 
 
 def get_player(race="", classe=""):
-    if is_race_valid(race) and is_class_valid(classe):
+    if data.is_race_valid(race) and data.is_class_valid(classe):
         player_race = 0
         player_class = 0
 
@@ -182,17 +182,6 @@ def get_player(race="", classe=""):
 
         temp_char = Character(player_attributes)
         return temp_char
-
-
-def is_race_valid(race=""):
-    return race.capitalize() in data.get_playable_races(True)
-
-
-def is_class_valid(classe=""):
-    for classes in data.get_assignable_classes(True):
-        if classe.lower() in classes:
-            return True
-    return False
 
 
 def get_available_attacks(char):

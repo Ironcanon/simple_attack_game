@@ -24,7 +24,7 @@ for i in avalible_races:
 
 race_choice = input("Which race would you like? : ").capitalize()
 
-while not race_choice or not characters.is_race_valid(race_choice):
+while not race_choice or not data.is_race_valid(race_choice):
     race_choice = input(
         "That choice wasn't valid, please try again. Which race would you like? : ").capitalize()
 
@@ -41,7 +41,7 @@ for i in avalible_classes:
 
 class_choice = input("Which class would you like? : ").lower()
 
-while not class_choice or not characters.is_class_valid(class_choice):
+while not class_choice or not data.is_class_valid(class_choice):
     class_choice = input(
         "That choice wasn't valid, please try again. Which class would you like? : ").lower()
 print(f"A {class_choice.capitalize()}, perfect!")

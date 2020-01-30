@@ -153,6 +153,17 @@ def get_assignable_classes(as_list=False):
         return assignable_classes
 
 
+def is_race_valid(race=""):
+    return race.capitalize() in get_playable_races(True)
+
+
+def is_class_valid(classe=""):
+    for classes in get_assignable_classes(True):
+        if classe.lower() in classes:
+            return True
+    return False
+
+
 def drop_items(possible_drops=[], max_drops=0):
     dropped_items = []
     items_sim = []
