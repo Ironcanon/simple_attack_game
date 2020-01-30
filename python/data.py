@@ -151,3 +151,28 @@ def get_assignable_classes(as_list=False):
         return assignable_classes_li
     else:
         return assignable_classes
+
+
+def drop_items(possible_drops=[], max_drops=0):
+    dropped_items = []
+    items_sim = []
+    item_ids = []
+    # iterates through dict to grab item_name, drop_chance and item_id
+    for i in items.items():
+        if i[0] in possible_drops:
+            items_sim.append([i[1][0], i[1][4], i[0]])
+    # sorts list by drop_chance so rarest will be first
+    items_sim.sort(key=lambda x: x[1])
+    for i in items_sim:
+        # get a random float (0,1] to test against drop_chance
+        kill_chance = round(random.random(), 3)
+        if len(dropped_items) == max_drops:
+            break
+        # if kill_chance is less than the drop chance of the object adds it to the drop list
+        elif kill_chance <= i[1]:
+            dropped_items.append(i[0])
+            # stores each dropped item's id in a secondary list
+            item_ids.append(i[2])
+    # adds the items id's at the end
+    dropped_items.append(item_ids)
+    return dropped_items
