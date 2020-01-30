@@ -124,7 +124,7 @@ class Character():
                     elif change_opperator == '*':
                         mana *= float(change_amount)
 
-        temp_race = data.races.get(atributes[0], 0)
+        temp_race = data.get_all_races().get(atributes[0], 0)
 
         name = temp_race[0]
         health = temp_race[1]
@@ -170,7 +170,7 @@ def get_player(race="", classe=""):
         player_race = 0
         player_class = 0
 
-        for i in data.races.items():
+        for i in data.player_races.items():
             if i[1][0] == race:
                 player_race = i[0]
                 break

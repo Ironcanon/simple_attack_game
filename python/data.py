@@ -2,7 +2,7 @@ import random
 
 
 attacks = {
-    #layout = ["def_name", "ingame_name"]
+    # layout = ["def_name", "ingame_name"]
     0: ["attack_basic", "basic attack"],
     1: ["attack_archer_basic", "archer attack"],
     2: ["attack_mage_basic", "mage attack"],
@@ -12,14 +12,18 @@ status_effects: {
     # layout = ["name", "description"]
     0: ["Stunned", "You will miss the next turn"]
 }
-races = {
+enemy_races = {
     # layout = ["name" , health, dmg, ammo, mana, [ex_attacks], is_playable]
-    0: ["Skeleton", 20, 5.0, 0, 0, [], False],
-    1: ["Zombie", 35, 4.0, 0, 0, [], False],
-    100: ["Human", 60, 10.0, 0, 0, [], True],
-    101: ["Elf", 50, 10.0, 4, 20, [1, 2], True],
-    102: ["Dwarf", 50, 10.0, 0, 20, [3], True]
+    0: ["Skeleton", 20, 5.0, 0, 0, []],
+    1: ["Zombie", 35, 4.0, 0, 0, []]
 
+}
+
+player_races = {
+    # layout = ["name" , health, dmg, ammo, mana, [ex_attacks]]
+    100: ["Human", 60, 10.0, 0, 0, []],
+    101: ["Elf", 50, 10.0, 4, 20, [1, 2]],
+    102: ["Dwarf", 50, 10.0, 0, 20, [3]]
 }
 
 classes = {
@@ -50,13 +54,13 @@ items = {
         "ring": 5,
         "consumable": 4
     },
-    # layout = ["name", "description", "item_type", "stat_changes"]
-    0: ["arrow", "It's an arrow, plain and simple, point sharp end towards enemy and shoot.", "once_off_consumable", "a+1"],
-    1: ["old chestplate", "It's seen better days but it's better than nothing.", "chestplate", "h+5"],
-    2: ["dented helmet", "Seems like it failed its last wearer, second time lucky.", "helmet", "h+3"],
-    3: ["torn leggings", "Looks like it went through a wood chipper.", "leggings", "h+3"],
-    4: ["holy boots", "Because they have lots of holes, get it.", "boots", "h+2"],
-    5: ["chipped sword", "This sword has seen many battles but was never used for long, I wonder why.", "boots", "d+3"]
+    # layout = ["name", "description", "item_type", "stat_changes", drop_chance]
+    0: ["arrow", "It's an arrow, plain and simple, point sharp end towards enemy and shoot.", "once_off_consumable", "a+1", 0.8],
+    1: ["old chestplate", "It's seen better days but it's better than nothing.", "chestplate", "h+5", 0.2],
+    2: ["dented helmet", "Seems like it failed its last wearer, second time lucky.", "helmet", "h+3", 0.3],
+    3: ["torn leggings", "Looks like it went through a wood chipper.", "leggings", "h+3", 0.3],
+    4: ["holy boots", "Because they have lots of holes, get it.", "boots", "h+2", 0.4],
+    5: ["chipped sword", "This sword has seen many battles but was never used for long, I wonder why.", "boots", "d+3", 0.2]
 }
 
 
@@ -82,15 +86,21 @@ def get_all_races(name_only=False):
     Gets all of the races stored in races.
 
     If name_only is true returns only the names
+    otherwise returns a dict
     '''
-    all_races = []
     if name_only:
-        for i in races.values():
+        all_races = []
+        for i in enemy_races.values():
+            all_races.append(i[0])
+        for i in player_races.values():
             all_races.append(i[0])
         return(all_races)
     else:
-        for i in races.values():
-            all_races.append(i)
+        all_races = {}
+        for i in enemy_races.items():
+            all_races[i[0]] = i[1]
+        for i in player_races.items():
+            all_races[i[0]] = i[1]
         return(all_races)
 
 
@@ -102,17 +112,15 @@ def get_enemy_races(name_only=False):
     otherwise a dict
     '''
     if name_only:
-        enemy_races = []
-        for i in races.values():
-            if not i[-1]:
-                enemy_races.append(i[0])
-        return(enemy_races)
+        enemy_races_temp = []
+        for i in enemy_races.values():
+            enemy_races_temp.append(i[0])
+        return(enemy_races_temp)
     else:
-        enemy_races = {}
-        for i in races.items():
-            if not i[1][-1]:
-                enemy_races[i[0]] = i[1]
-        return(enemy_races)
+        enemy_races_temp = {}
+        for i in enemy_races.items():
+            enemy_races_temp[i[0]] = i[1]
+        return(enemy_races_temp)
 
 
 def get_playable_races(name_only=False):
@@ -124,15 +132,13 @@ def get_playable_races(name_only=False):
     '''
     if name_only:
         playable_races = []
-        for i in races.values():
-            if i[-1]:
-                playable_races.append(i[0])
+        for i in player_races.values():
+            playable_races.append(i[0])
         return(playable_races)
     else:
         playable_races = {}
-        for i in races.items():
-            if i[1][-1]:
-                playable_races[i[0]] = i[1]
+        for i in player_races.items():
+            playable_races[i[0]] = i[1]
         return(playable_races)
 
 

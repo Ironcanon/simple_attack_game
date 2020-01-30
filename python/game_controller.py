@@ -77,7 +77,8 @@ def player_turn(enemy, player, player_name):
                 print(attack(player, enemy))
                 break
             else:
-                continue
+                print(
+                    "That choice wasn't valid (a valid response would be 'yes'), please try again.")
         elif choice == '?':
             if player.ammo == 0 and player.mana == 0:
                 print(f"{player_name} has no ammo nor mana.")
@@ -89,7 +90,8 @@ def player_turn(enemy, player, player_name):
                 print(
                     f"{player_name} has {player.mana} mana and {player.ammo} ammo")
         else:
-            print("That choice wasn't valid, please try again.")
+            print(
+                "That choice wasn't valid (a valid response would be '?' or an attack name), please try again.")
     return f"{player_name}'s turn is finished\n"
 
 
