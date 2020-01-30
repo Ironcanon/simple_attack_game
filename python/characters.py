@@ -131,7 +131,7 @@ class Character():
         name = name + " " + temp_class[0]
         attacks += temp_class[1]
         attacks = list(set(attacks))
-        apply_class_changes(self, temp_class[2])
+        apply_class_changes(self, temp_class[3])
 
         self.name = name
         self.health = health

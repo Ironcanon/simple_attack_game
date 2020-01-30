@@ -13,9 +13,9 @@ status_effects: {
     0: ["Stunned", "You will miss the next turn"]
 }
 enemy_races = {
-    # layout = ["name" , health, attack, ammo, mana, [ex_attacks]]
-    0: ["Skeleton", 20, 5.0, 0, 0, []],
-    1: ["Zombie", 35, 4.0, 0, 0, []]
+    # layout = ["name" , health, attack, ammo, mana, [ex_attacks], [item_drops], max_drops]
+    0: ["Skeleton", 20, 5.0, 0, 0, [], [8], 3],
+    1: ["Zombie", 35, 4.0, 0, 0, [], [9], 3]
 
 }
 
@@ -27,17 +27,18 @@ player_races = {
 }
 
 classes = {
-    # layout = ["name", [attacks], [changes]]
-    0: ["soldier", [0], ["h+10", "d+2"]],
-    1: ["mage", [0, 2], ["m+50"]],
-    2: ["tank", [0], ["h*2", "d*0.7"]],
-    3: ["archer", [0, 1], ["a+10"]],
-    100: ["boss", [], ["h*1.5", "d*2", "a*2", "m*2"]],
-    101: ["basic", [0], []]
+    # layout = ["name", [attacks],[item_drops], [changes]]
+    0: ["soldier", [0], [2, 4, 5], ["h+10", "d+2"]],
+    1: ["mage", [0, 2], [3, 7], ["m+50"]],
+    2: ["tank", [0], [1, 6], ["h*2", "d*0.7"]],
+    3: ["archer", [0, 1], [0, 3, 4], ["a+10"]],
+    100: ["boss", [], [], ["h*1.5", "d*2", "a*2", "m*2"]],
+    101: ["basic", [0], [], []]
 
 }
 
 fight_intro = {
+    # The name of the enemy is placed between the two strings
     0: ["The ", " roars a challange."],
     1: ["Head down, the ", " prepares for a fight."],
     2: ["The ", " has been staring at you for some time, I think it wants a fight."],
@@ -47,20 +48,28 @@ fight_intro = {
 
 items = {
     # key -1 stores the item types that can only have one equiped as a string list
-    -1: ["helmet", "chestplate", "leggings", "boots", "weapon", "shield", "once_off_consumable"],
+    -1: ["helmet", "chestplate", "leggings", "boots", "weapon", "offhand", "once_off_consumable"],
     # key -2 stores the item types that can have multiple equipped/ stored
     -2: {
         # layout = "name" : max_ammount
         "ring": 5,
-        "consumable": 4
+        "consumable": 4,
+        "rubish": 99
     },
     # layout = ["name", "description", "item_type", "stat_changes", drop_chance]
+    # cause I'm lazy 0: ["","","","",0]
     0: ["arrow", "It's an arrow, plain and simple, point sharp end towards enemy and shoot.", "once_off_consumable", "a+1", 0.8],
     1: ["old chestplate", "It's seen better days but it's better than nothing.", "chestplate", "h+5", 0.2],
     2: ["dented helmet", "Seems like it failed its last wearer, second time lucky.", "helmet", "h+3", 0.3],
     3: ["torn leggings", "Looks like it went through a wood chipper.", "leggings", "h+3", 0.3],
     4: ["holy boots", "Because they have lots of holes, get it.", "boots", "h+2", 0.4],
-    5: ["chipped sword", "This sword has seen many battles but was never used for long, I wonder why.", "boots", "d+3", 0.2]
+    5: ["chipped sword", "This sword has seen many battles but was never used for long, I wonder why.", "boots", "d+3", 0.2],
+    6: ["worn shield", "Might actually be better off without it.", "offhand", "h+4", 0.25],
+    7: ["blue ring", "Seems like an ordinary ring not going to lie", "ring", "m+5", 0.5],
+    8: ["bone", "An old, flaky bone, just what I wanted for christmas", "rubish", "n", 0.9],
+    9: ["rotten flesh", "Eww, just very eww", "rubish", "n", 0.9]
+
+
 }
 
 
