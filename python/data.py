@@ -13,14 +13,14 @@ status_effects: {
     0: ["Stunned", "You will miss the next turn"]
 }
 enemy_races = {
-    # layout = ["name" , health, dmg, ammo, mana, [ex_attacks], is_playable]
+    # layout = ["name" , health, attack, ammo, mana, [ex_attacks]]
     0: ["Skeleton", 20, 5.0, 0, 0, []],
     1: ["Zombie", 35, 4.0, 0, 0, []]
 
 }
 
 player_races = {
-    # layout = ["name" , health, dmg, ammo, mana, [ex_attacks]]
+    # layout = ["name" , health, attack, ammo, mana, [ex_attacks]]
     100: ["Human", 60, 10.0, 0, 0, []],
     101: ["Elf", 50, 10.0, 4, 20, [1, 2]],
     102: ["Dwarf", 50, 10.0, 0, 20, [3]]

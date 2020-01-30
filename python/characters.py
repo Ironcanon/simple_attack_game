@@ -1,74 +1,67 @@
 import random
 import data
 
-name = ""
-health = 0
-dmg = 0.0
-ammo = 0
-mana = 0
-attacks = []
-
 
 def attack_basic(char, target, check=False):
     if not check:
-        target.health -= char.dmg
+        target.health -= char.attack
         if target.health <= 0:
             target.health = 0
-        return(f"\n{char.name} attacked {target.name} for {char.dmg} damage!\n{target.name} has {target.health} health left.")
+        return(f"\n{char.name} attacked {target.name} for {char.attack} damage!\n{target.name} has {target.health} health left.")
     else:
         #layout = ["attack_cost_sescription", mana_cost, ammo_cost]
-        return ["This attack is free", 0, 0]
+        return [f"This attack will do {char.attack} dammage and is free", 0, 0]
 
 
 def attack_archer_basic(char, target, check=False):
     if not check:
         if char.ammo > 0:
-            target.health -= char.dmg + 5
+            target.health -= (char.attack + 5)
             char.ammo -= 1
             if target.health <= 0:
                 target.health = 0
-            return(f"\n{char.name} shot {target.name} for {char.dmg + 5} damage!\n{target.name} has {target.health} health left.")
+            return(f"\n{char.name} shot {target.name} for {char.attack + 5} damage!\n{target.name} has {target.health} health left.")
         else:
             return(f"\n{char.name} is out of arrows so the attack failed!")
     else:
         #layout = ["attack_cost_sescription", mana_cost, ammo_cost]
-        return ["This attack costs 1 ammo", 0, 1]
+        return [f"This attack will do {char.attack + 5} dammage and costs 1 ammo", 0, 1]
 
 
 def attack_mage_basic(char, target, check=False):
     if not check:
         if char.mana >= 5:
-            target.health -= (char.dmg * 1.5)
+            target.health -= (char.attack * 1.5)
             char.mana -= 5
             if target.health <= 0:
                 target.health = 0
-            return(f"\n{char.name} blasted {target.name} for {char.dmg * 1.5} damage!\n{target.name} has {target.health} health left.")
+            return(f"\n{char.name} blasted {target.name} for {char.attack * 1.5} damage!\n{target.name} has {target.health} health left.")
         else:
             return(f"\n{char.name} is out of mana so the attack failed!")
     else:
         #layout = ["attack_cost_sescription", mana_cost, ammo_cost]
-        return ["This attack costs 5 mana", 5, 0]
+        return [f"This attack will do {char.attack * 1.5} dammage and costs 5 mana", 5, 0]
 
 
 def attack_dwarf_slam(char, target, check=False):
     if not check:
         if char.mana >= 10:
-            target.health -= (char.dmg * 2)
+            target.health -= (char.attack * 2)
             char.mana -= 10
             if target.health <= 0:
                 target.health = 0
-            return(f"\n{char.name} slammed {target.name} for {char.dmg * 2} damage!\n{target.name} has {target.health} health left.")
+            return(f"\n{char.name} slammed {target.name} for {char.attack * 2} damage!\n{target.name} has {target.health} health left.")
         else:
             return(f"\n{char.name} is out of mana so the attack failed!")
     else:
         #layout = ["attack_cost_sescription", mana_cost, ammo_cost]
-        return ["This attack costs 10 mana", 10, 0]
+        return [f"This attack will do {char.attack * 2} dammage and costs 10 mana", 10, 0]
 
 
 class Character():
     name = ""
     health = 0
-    dmg = 0
+    attack = 0
     ammo = 0
     mana = 0
     attacks = []
@@ -76,7 +69,7 @@ class Character():
     def __init__(self, atributes=[]):
         name = self.name
         health = self.health
-        dmg = self.dmg
+        attack = self.attack
         ammo = self.ammo
         mana = self.mana
         attacks = self.attacks
@@ -84,7 +77,7 @@ class Character():
         def apply_class_changes(self, changes=[]):
             nonlocal name
             nonlocal health
-            nonlocal dmg
+            nonlocal attack
             nonlocal ammo
             nonlocal mana
             nonlocal attacks
@@ -104,11 +97,11 @@ class Character():
                         health *= float(change_amount)
                 elif change_type == 'd':
                     if change_opperator == '+':
-                        dmg += float(change_amount)
+                        attack += float(change_amount)
                     elif change_opperator == '-':
-                        dmg -= float(change_amount)
+                        attack -= float(change_amount)
                     elif change_opperator == '*':
-                        dmg *= float(change_amount)
+                        attack *= float(change_amount)
                 elif change_type == 'a':
                     if change_opperator == '+':
                         ammo += float(change_amount)
@@ -128,7 +121,7 @@ class Character():
 
         name = temp_race[0]
         health = temp_race[1]
-        dmg = temp_race[2]
+        attack = temp_race[2]
         ammo = temp_race[3]
         mana = temp_race[4]
         attacks = temp_race[5]
@@ -142,13 +135,13 @@ class Character():
 
         self.name = name
         self.health = health
-        self.dmg = dmg
+        self.attack = attack
         self.ammo = ammo
         self.mana = mana
         self.attacks = attacks
 
     def __str__(self):
-        return f"Character's name is {self.name}, they have {self.health} health and {self.dmg} dmg"
+        return f"Character's name is {self.name}, they have {self.health} health and {self.attack} attack"
 
 
 def get_random_enemy():

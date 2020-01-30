@@ -89,10 +89,12 @@ def player_turn(enemy, player, player_name):
         if choice in available_attacks:
             attack = characters.get_attack(choice)
             attack_check = input(
-                f"Are you sure you want to use {choice}? : ")
-            if attack_check.lower()[0] == 'y':
+                f"Are you sure you want to use {choice}? Enter 'yes' or enter to attack or '?' to check attack details: ")
+            if attack_check.lower()[0] == 'y' or not attack_check:
                 print(attack(player, enemy))
                 break
+            elif attack_check == '?':
+                print(attack(player, enemy, True))
             else:
                 print(
                     "That choice wasn't valid (a valid response would be 'yes'), please try again.")
