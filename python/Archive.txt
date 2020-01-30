@@ -1,0 +1,163 @@
+if "human" in args:
+    name = "Human"
+    health += 10
+elif "elf" in args:
+    name = "Elf"
+    mana += 20
+    ammo += 4
+elif "dwarf" in args:
+    name = "Dwarf"
+    mana += 30
+else:
+    name = "????"
+
+if "archer" in args:
+    name += " archer"
+    ammo += 10
+
+elif "mage" in args:
+    name += " mage"
+    mana += 50
+
+elif "tank" in args:
+    name += " tank"
+    health *= 2
+    dmg *= 0.7
+else:
+    name += " soldier"
+    health += 10
+    dmg += 2
+
+self.name = name
+self.health = health
+self.dmg = dmg
+self.ammo = ammo
+self.mana = mana
+self.stunned = stunned
+
+stunned = False
+
+def set_stun(self, is_stunned):
+    nonlocal stunned
+    stunned = is_stunned
+
+ if "skeleton" in args:
+        name = "Skeleton"
+        health -= 10
+    else:
+        name = "????"
+
+    if "archer" in args:
+        name += " archer"
+        ammo = 10
+
+    elif "mage" in args:
+        name += " mage"
+        mana = 50
+
+    elif "tank" in args:
+        name += " tank"
+        health *= 2
+        dmg *= 0.5
+    else:
+        name += " soldier"
+
+    if "boss" in args:
+        name += " boss"
+        mana *= 2
+        ammo *= 2
+        health *= 1.5
+        dmg *= 2
+
+    self.name = name
+    self.health = health
+    self.dmg = dmg
+    self.ammo = ammo
+    self.mana = mana
+    self.stunned = False
+
+def set_stun(self, is_stunned):
+    nonlocal stunned
+    stunned = is_stunned
+
+class Player():
+
+    name = ""
+    health = 50
+    dmg = 10.0
+    ammo = 0
+    mana = 0
+    attacks = []
+
+    def __init__(self, atributes=[]):
+        name = self.name
+        health = self.health
+        dmg = self.dmg
+        ammo = self.ammo
+        mana = self.mana
+        attacks = self.attacks
+
+        def apply_class_changes(self, changes=[]):
+            nonlocal name
+            nonlocal health
+            nonlocal dmg
+            nonlocal ammo
+            nonlocal mana
+            nonlocal attacks
+
+            for change in changes:
+
+                change_type = change[0]
+                change_opperator = change[1]
+                change_amount = change[2:]
+
+                if change_type == 'h':
+                    if change_opperator == '+':
+                        health += float(change_amount)
+                    elif change_opperator == '-':
+                        health -= float(change_amount)
+                    elif change_opperator == '*':
+                        health *= float(change_amount)
+                elif change_type == 'd':
+                    if change_opperator == '+':
+                        dmg += float(change_amount)
+                    elif change_opperator == '-':
+                        dmg -= float(change_amount)
+                    elif change_opperator == '*':
+                        dmg *= float(change_amount)
+                elif change_type == 'a':
+                    if change_opperator == '+':
+                        ammo += float(change_amount)
+                    elif change_opperator == '-':
+                        ammo -= float(change_amount)
+                    elif change_opperator == '*':
+                        ammo *= float(change_amount)
+                elif change_type == 'm':
+                    if change_opperator == '+':
+                        mana += float(change_amount)
+                    elif change_opperator == '-':
+                        mana -= float(change_amount)
+                    elif change_opperator == '*':
+                        mana *= float(change_amount)
+
+        temp_race = Data.races.get(atributes[0], 0)
+
+        name = temp_race[0]
+        health = temp_race[1]
+        dmg = temp_race[2]
+        ammo = temp_race[3]
+        mana = temp_race[4]
+        attacks = temp_race[5]
+
+        temp_class = Data.classes.get(atributes[1], 0)
+
+        name = name + " " + temp_class[0]
+        attacks += temp_class[1]
+        apply_class_changes(temp_class[2])
+
+        self.name = name
+        self.health = health
+        self.dmg = dmg
+        self.ammo = ammo
+        self.mana = mana
+        self.attacks = attacks
