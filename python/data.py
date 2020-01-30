@@ -41,6 +41,24 @@ fight_intro = {
     4: ["The ", " caught you by suprise, get ready to fight."]
 }
 
+items = {
+    # key -1 stores the item types that can only have one equiped as a string list
+    -1: ["helmet", "chestplate", "leggings", "boots", "weapon", "shield", "once_off_consumable"],
+    # key -2 stores the item types that can have multiple equipped/ stored
+    -2: {
+        # layout = "name" : max_ammount
+        "ring": 5,
+        "consumable": 4
+    },
+    # layout = ["name", "description", "item_type", "stat_changes"]
+    0: ["arrow", "It's an arrow, plain and simple, point sharp end towards enemy and shoot.", "once_off_consumable", "a+1"],
+    1: ["old chestplate", "It's seen better days but it's better than nothing.", "chestplate", "h+5"],
+    2: ["dented helmet", "Seems like it failed its last wearer, second time lucky.", "helmet", "h+3"],
+    3: ["torn leggings", "Looks like it went through a wood chipper.", "leggings", "h+3"],
+    4: ["holy boots", "Because they have lots of holes, get it.", "boots", "h+2"],
+    5: ["chipped sword", "This sword has seen many battles but was never used for long, I wonder why.", "boots", "d+3"]
+}
+
 
 def get_all_classes(name_only=False):
     '''
