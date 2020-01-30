@@ -65,6 +65,7 @@ def game_setup():
     player_char = characters.get_player(race_choice, class_choice)
 
     print(f"Well {char_name} the {player_char.name.lower()}, I wish you well on your adventure, bon voyage!\n")
+    player_char.name = char_name
     return [char_name, player_char]
 
 
@@ -90,11 +91,11 @@ def player_turn(enemy, player, player_name):
             attack = characters.get_attack(choice)
             attack_check = input(
                 f"Are you sure you want to use {choice}? Enter 'yes' or enter to attack or '?' to check attack details: ")
-            if attack_check.lower()[0] == 'y' or not attack_check:
+            if not attack_check or attack_check.lower()[0] == 'y':
                 print(attack(player, enemy))
                 break
             elif attack_check == '?':
-                print(attack(player, enemy, True))
+                print(attack(player, enemy, True)[0])
             else:
                 print(
                     "That choice wasn't valid (a valid response would be 'yes'), please try again.")
