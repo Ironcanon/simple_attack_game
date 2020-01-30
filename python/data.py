@@ -14,11 +14,17 @@ status_effects: {
 }
 races = {
     # layout = ["name" , health, dmg, ammo, mana, [ex_attacks], is_playable]
+<<<<<<< Updated upstream
     0: ["Skeleton", 20, 5.0, 0, 0, [], False],
     1: ["Zombie", 35, 4.0, 0, 0, [], False],
     100: ["Human", 60, 10.0, 0, 0, [], True],
     101: ["Elf", 50, 10.0, 4, 20, [1, 2], True],
     102: ["Dwarf", 50, 10.0, 0, 20, [3], True]
+=======
+    0: ["Skeleton", 20, 6.0, 0, 0, []],
+    1: ["Zombie", 35, 4.0, 0, 0, []],
+    2: ["Goblin", 30, 6.0, 2, 10, []]
+>>>>>>> Stashed changes
 
 }
 
