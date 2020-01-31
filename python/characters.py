@@ -97,7 +97,7 @@ class Character():
                 elif change_opperator == '*':
                     self.mana *= float(change_amount)
 
-    def equip_items(self, items):
+    def equip_items(self, old_items, new_items):
         pass
 
     def __init__(self, atributes=[]):
