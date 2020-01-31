@@ -47,10 +47,10 @@ fight_intro = {
 }
 
 items = {
-    # key -1 stores the item types that can only have one equiped as a string list
-    -1: ["helmet", "chestplate", "leggings", "boots", "weapon", "offhand", "once_off_consumable"],
+    # Stores the item types that can only have one equiped as a string list
+    "unique_item_types": ["helmet", "chestplate", "leggings", "boots", "weapon", "offhand", "once_off_consumable"],
     # key -2 stores the item types that can have multiple equipped/ stored
-    -2: {
+    "regular_item_types": {
         # layout = "name" : max_ammount
         "ring": 5,
         "consumable": 4,
@@ -210,11 +210,22 @@ def drop_items(possible_drops=[], max_drops=0):
         kill_chance = round(random.random(), 3)
         if len(dropped_items) == max_drops:
             break
-        # if kill_chance is less than the drop chance of the object adds it to the drop list
+        # if kill_chance is less than the drop chance of the object adds its name to the drop list
         elif kill_chance <= i[1]:
             dropped_items.append(i[0])
             # stores each dropped item's id in a secondary list
             item_ids.append(i[2])
-    # adds the items id's at the end
+    # adds the items ids
     dropped_items.append(item_ids)
+    # Creates a str of the items dropped
+    print_str = ""
+    for i in dropped_items[0:-1]:
+        if i == dropped_items[0:-1][-1]:
+            print_str = print_str + i + ". "
+        elif i == dropped_items[0:-1][-2]:
+            print_str = print_str + i + " and "
+        else:
+            print_str = print_str + i + ", "
+    # adds the str at the end
+    dropped_items.append(print_str)
     return dropped_items

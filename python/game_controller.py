@@ -73,16 +73,13 @@ def player_turn(enemy, player, player_name):
     print(f"It is {player_name}'s turn")
     print("The available attacks are: ", end="")
     available_attacks = characters.get_available_attacks(player)
-    if len(available_attacks) == 1:
-        print(available_attacks[0], end=". ")
-    else:
-        for i in available_attacks:
-            if i == available_attacks[-2]:
-                print(i, end=" and ")
-            elif i == available_attacks[-1]:
-                print(i, end=". ")
-            else:
-                print(i, end=", ")
+    for i in available_attacks:
+        if i == available_attacks[-1]:
+            print(i, end=". ")
+        elif i == available_attacks[-2]:
+            print(i, end=" and ")
+        else:
+            print(i, end=", ")
 
     while True:
         choice = input(
@@ -98,7 +95,7 @@ def player_turn(enemy, player, player_name):
                 print(attack(player, enemy, True)[0])
             else:
                 print(
-                    "That choice wasn't valid (a valid response would be 'yes'), please try again.")
+                    "That choice wasn't valid (a valid response would be 'yes', enter or '?'), please try again.")
         elif choice == '?':
             if player.ammo == 0 and player.mana == 0:
                 print(f"{player_name} has no ammo nor mana.")
@@ -138,6 +135,8 @@ def reg_round(player, player_name):
         if enemy.health == 0:
             print(
                 f"Congradulations {player_name} you defeated the {enemy.name}!\n")
+            items = data.drop_items(enemy.item_drops, enemy.max_drops)
+            player.equip_items(items)
             break
         else:
             print(enemy_turn(enemy, player))
