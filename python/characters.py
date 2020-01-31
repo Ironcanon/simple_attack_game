@@ -59,63 +59,48 @@ def attack_dwarf_slam(char, target, check=False):
 
 
 class Character():
-    name = ""
-    health = 0
-    attack = 0
-    ammo = 0
-    mana = 0
-    attacks = []
+
+    def apply_stat_changes(self, changes=[]):
+
+        for change in changes:
+
+            change_type = change[0]
+            change_opperator = change[1]
+            change_amount = change[2:]
+
+            if change_type == 'h':
+                if change_opperator == '+':
+                    self.health += float(change_amount)
+                elif change_opperator == '-':
+                    self.health -= float(change_amount)
+                elif change_opperator == '*':
+                    self.health *= float(change_amount)
+            elif change_type == 'd':
+                if change_opperator == '+':
+                    self.attack += float(change_amount)
+                elif change_opperator == '-':
+                    self.attack -= float(change_amount)
+                elif change_opperator == '*':
+                    self.attack *= float(change_amount)
+            elif change_type == 'a':
+                if change_opperator == '+':
+                    self.ammo += float(change_amount)
+                elif change_opperator == '-':
+                    self.ammo -= float(change_amount)
+                elif change_opperator == '*':
+                    self.ammo *= float(change_amount)
+            elif change_type == 'm':
+                if change_opperator == '+':
+                    self.mana += float(change_amount)
+                elif change_opperator == '-':
+                    self.mana -= float(change_amount)
+                elif change_opperator == '*':
+                    self.mana *= float(change_amount)
+
+    def equip_items(self, items):
+        pass
 
     def __init__(self, atributes=[]):
-        name = self.name
-        health = self.health
-        attack = self.attack
-        ammo = self.ammo
-        mana = self.mana
-        attacks = self.attacks
-
-        def apply_class_changes(self, changes=[]):
-            nonlocal name
-            nonlocal health
-            nonlocal attack
-            nonlocal ammo
-            nonlocal mana
-            nonlocal attacks
-
-            for change in changes:
-
-                change_type = change[0]
-                change_opperator = change[1]
-                change_amount = change[2:]
-
-                if change_type == 'h':
-                    if change_opperator == '+':
-                        health += float(change_amount)
-                    elif change_opperator == '-':
-                        health -= float(change_amount)
-                    elif change_opperator == '*':
-                        health *= float(change_amount)
-                elif change_type == 'd':
-                    if change_opperator == '+':
-                        attack += float(change_amount)
-                    elif change_opperator == '-':
-                        attack -= float(change_amount)
-                    elif change_opperator == '*':
-                        attack *= float(change_amount)
-                elif change_type == 'a':
-                    if change_opperator == '+':
-                        ammo += float(change_amount)
-                    elif change_opperator == '-':
-                        ammo -= float(change_amount)
-                    elif change_opperator == '*':
-                        ammo *= float(change_amount)
-                elif change_type == 'm':
-                    if change_opperator == '+':
-                        mana += float(change_amount)
-                    elif change_opperator == '-':
-                        mana -= float(change_amount)
-                    elif change_opperator == '*':
-                        mana *= float(change_amount)
 
         temp_race = data.get_all_races().get(atributes[0], 0)
 
@@ -126,12 +111,20 @@ class Character():
         mana = temp_race[4]
         attacks = temp_race[5]
 
+        if len(temp_race) > 6:
+            item_drops = temp_race[6]
+            max_drops = temp_race[7]
+
         temp_class = data.classes.get(atributes[1], 0)
 
         name = name + " " + temp_class[0]
         attacks += temp_class[1]
         attacks = list(set(attacks))
-        apply_class_changes(self, temp_class[3])
+
+        item_drops += temp_class[2]
+        item_drops = list(set(item_drops))
+
+        self.apply_stat_changes(temp_class[3])
 
         self.name = name
         self.health = health
@@ -139,6 +132,9 @@ class Character():
         self.ammo = ammo
         self.mana = mana
         self.attacks = attacks
+        self.item_drops = item_drops
+        self.equipped_items = []
+        self.max_drops = max_drops
 
     def __str__(self):
         return f"Character's name is {self.name}, they have {self.health} health and {self.attack} attack"

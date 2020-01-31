@@ -161,3 +161,16 @@ class Player():
         self.ammo = ammo
         self.mana = mana
         self.attacks = attacks
+
+
+
+
+    name = ""
+    health = 0
+    attack = 0
+    ammo = 0
+    mana = 0
+    attacks = []
+    item_drops = []
+    equipped_items = []
+    max_drops = 0

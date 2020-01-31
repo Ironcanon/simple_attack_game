@@ -20,7 +20,7 @@ enemy_races = {
 }
 
 player_races = {
-    # layout = ["name" , health, attack, ammo, mana, [ex_attacks]]
+    # layout = ["name" , health, attack, ammo, mana, [ex_attacks], [item_drops], max_drops]
     100: ["Human", 60, 10.0, 0, 0, []],
     101: ["Elf", 50, 10.0, 4, 20, [1, 2]],
     102: ["Dwarf", 50, 10.0, 0, 20, [3]]
@@ -72,6 +72,8 @@ items = {
 
 }
 
+# Itterates over the classes dict and returns a list
+
 
 def get_all_classes(name_only=False):
     '''
@@ -89,13 +91,15 @@ def get_all_classes(name_only=False):
             all_classes.append(i)
         return(all_classes)
 
+# Itterates over player_races and enemy_races and combines them into either a list or a dict
+
 
 def get_all_races(name_only=False):
     '''
     Gets all of the races stored in races.
 
-    If name_only is true returns only the names
-    otherwise returns a dict
+    If name_only is true returns only the names as a list
+    otherwise returns a dict with all values
     '''
     if name_only:
         all_races = []
@@ -111,6 +115,8 @@ def get_all_races(name_only=False):
         for i in player_races.items():
             all_races[i[0]] = i[1]
         return(all_races)
+
+# Itterates over enemy_races and returns a list
 
 
 def get_enemy_races(name_only=False):
@@ -131,6 +137,8 @@ def get_enemy_races(name_only=False):
             enemy_races_temp[i[0]] = i[1]
         return(enemy_races_temp)
 
+# Itterates over player_races and returns a list
+
 
 def get_playable_races(name_only=False):
     '''
@@ -150,6 +158,8 @@ def get_playable_races(name_only=False):
             playable_races[i[0]] = i[1]
         return(playable_races)
 
+# Itterates over classes and returns a list containing all playable classes
+
 
 def get_assignable_classes(as_list=False):
     '''
@@ -167,9 +177,13 @@ def get_assignable_classes(as_list=False):
     else:
         return assignable_classes
 
+# Takes in a str and checks if that str is in the playable races list
+
 
 def is_race_valid(race=""):
     return race.capitalize() in get_playable_races(True)
+
+# Takes in a str and checks if that str is in the playable classes list
 
 
 def is_class_valid(classe=""):
@@ -177,6 +191,8 @@ def is_class_valid(classe=""):
         if classe.lower() in classes:
             return True
     return False
+
+# Takes in a list and an int and returns a list containing the drops for that kill
 
 
 def drop_items(possible_drops=[], max_drops=0):
