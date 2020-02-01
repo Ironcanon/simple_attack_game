@@ -5,11 +5,12 @@ import data
 def attack_basic(char, target, check=False):
     if not check:
         target.health -= char.attack
+        target.health = round(target.health, 1)
         if target.health <= 0:
             target.health = 0
         return(f"\n{char.name} attacked {target.name} for {char.attack} damage!\n{target.name} has {target.health} health left.")
     else:
-        #layout = ["attack_cost_sescription", mana_cost, ammo_cost]
+        # layout = ["attack_cost_sescription", mana_cost, ammo_cost]
         return [f"This attack will do {char.attack} dammage and is free", 0, 0]
 
 
@@ -17,6 +18,7 @@ def attack_archer_basic(char, target, check=False):
     if not check:
         if char.ammo > 0:
             target.health -= (char.attack + 5)
+            target.health = round(target.health, 1)
             char.ammo -= 1
             if target.health <= 0:
                 target.health = 0
@@ -24,7 +26,7 @@ def attack_archer_basic(char, target, check=False):
         else:
             return(f"\n{char.name} is out of arrows so the attack failed!")
     else:
-        #layout = ["attack_cost_sescription", mana_cost, ammo_cost]
+        # layout = ["attack_cost_sescription", mana_cost, ammo_cost]
         return [f"This attack will do {char.attack + 5} dammage and costs 1 ammo", 0, 1]
 
 
@@ -32,6 +34,7 @@ def attack_mage_basic(char, target, check=False):
     if not check:
         if char.mana >= 5:
             target.health -= (char.attack * 1.5)
+            target.health = round(target.health, 1)
             char.mana -= 5
             if target.health <= 0:
                 target.health = 0
@@ -39,7 +42,7 @@ def attack_mage_basic(char, target, check=False):
         else:
             return(f"\n{char.name} is out of mana so the attack failed!")
     else:
-        #layout = ["attack_cost_sescription", mana_cost, ammo_cost]
+        # layout = ["attack_cost_sescription", mana_cost, ammo_cost]
         return [f"This attack will do {char.attack * 1.5} dammage and costs 5 mana", 5, 0]
 
 
@@ -47,6 +50,7 @@ def attack_dwarf_slam(char, target, check=False):
     if not check:
         if char.mana >= 10:
             target.health -= (char.attack * 2)
+            target.health = round(target.health, 1)
             char.mana -= 10
             if target.health <= 0:
                 target.health = 0
@@ -54,7 +58,7 @@ def attack_dwarf_slam(char, target, check=False):
         else:
             return(f"\n{char.name} is out of mana so the attack failed!")
     else:
-        #layout = ["attack_cost_sescription", mana_cost, ammo_cost]
+        # layout = ["attack_cost_sescription", mana_cost, ammo_cost]
         return [f"This attack will do {char.attack * 2} dammage and costs 10 mana", 10, 0]
 
 
@@ -72,39 +76,39 @@ class Character():
     def apply_stat_changes(self, changes=[], check=False):
         if not check:
             for change in changes:
-
                 change_type = change[0]
-                change_opperator = change[1]
-                change_amount = change[2:]
+                if change_type != 'n':
+                    change_opperator = change[1]
+                    change_amount = change[2:]
 
-                if change_type == 'h':
-                    if change_opperator == '+':
-                        self.health += float(change_amount)
-                    elif change_opperator == '-':
-                        self.health -= float(change_amount)
-                    elif change_opperator == '*':
-                        self.health *= float(change_amount)
-                elif change_type == 'd':
-                    if change_opperator == '+':
-                        self.attack += float(change_amount)
-                    elif change_opperator == '-':
-                        self.attack -= float(change_amount)
-                    elif change_opperator == '*':
-                        self.attack *= float(change_amount)
-                elif change_type == 'a':
-                    if change_opperator == '+':
-                        self.ammo += float(change_amount)
-                    elif change_opperator == '-':
-                        self.ammo -= float(change_amount)
-                    elif change_opperator == '*':
-                        self.ammo *= float(change_amount)
-                elif change_type == 'm':
-                    if change_opperator == '+':
-                        self.mana += float(change_amount)
-                    elif change_opperator == '-':
-                        self.mana -= float(change_amount)
-                    elif change_opperator == '*':
-                        self.mana *= float(change_amount)
+                    if change_type == 'h':
+                        if change_opperator == '+':
+                            self.health += float(change_amount)
+                        elif change_opperator == '-':
+                            self.health -= float(change_amount)
+                        elif change_opperator == '*':
+                            self.health *= float(change_amount)
+                    elif change_type == 'd':
+                        if change_opperator == '+':
+                            self.attack += float(change_amount)
+                        elif change_opperator == '-':
+                            self.attack -= float(change_amount)
+                        elif change_opperator == '*':
+                            self.attack *= float(change_amount)
+                    elif change_type == 'a':
+                        if change_opperator == '+':
+                            self.ammo += float(change_amount)
+                        elif change_opperator == '-':
+                            self.ammo -= float(change_amount)
+                        elif change_opperator == '*':
+                            self.ammo *= float(change_amount)
+                    elif change_type == 'm':
+                        if change_opperator == '+':
+                            self.mana += float(change_amount)
+                        elif change_opperator == '-':
+                            self.mana -= float(change_amount)
+                        elif change_opperator == '*':
+                            self.mana *= float(change_amount)
         else:
             length = len(changes)
             loop_num = 1
@@ -154,13 +158,13 @@ class Character():
 
     def equip_items(self, new_items=[]):
         if new_items[-1]:
-            print("The item(s) that dropped were: " + new_items.pop())
+            print("The item(s) that dropped were: " + new_items.pop() + "\n")
         else:
-            print("No items dropped." + new_items.pop())
+            print("No items dropped." + new_items.pop() + "\n")
 
         # Checks if there are any items to add
         if new_items:
-            added_items = []
+            added_items = [[]]
             # Checks if there are any currently equipped items
             if len(self.equipped_items) > 1:
                 equipped_item_types = []
@@ -182,52 +186,62 @@ class Character():
                     if i in equipped_item_types:
                         # Checks whether that item type is unique
                         if i in data.items.get("unique_item_types"):
-                            #  Informs the user that an item of that type is already equipped
-                            print(
-                                f"As {self.name} already has a(n) {i} you will have to pick which {i} to equip")
-                            # Gets the str form of the stats of the new items
-                            stat_of_cur_item = self.apply_stat_changes(data.items.get(
-                                self.equipped_items[-1])[equipped_item_types.index(i)], True)
-                            stat_of_new_item = self.apply_stat_changes(
-                                data.items.get(new_items[-1][index_nit])[3], True)
-                            #  Asks the user to choose which item they want
-                            while True:
-                                choice = input(
-                                    f"Would you like to keep your current {i} which {stat_of_cur_item} or equip the new item which {stat_of_new_item}? Enter 1 for current item or 2 for new item: ")
-                                if choice == 1:
-                                    # Keeping the current item
-                                    break
-                                elif choice == 2:
-                                    # Choosing the new item
-                                    self.equipped_items[-1].pop(
-                                        equipped_item_types.index(i))
-                                    self.equipped_items.pop(
-                                        equipped_item_types.index(i))
-                                    added_items.append(new_items[index_nit])
-                                    added_items[-1].append(new_items[-1]
-                                                           [index_nit])
-                                else:
-                                    # Invalid choice
-                                    print(
-                                        "That choice wasn't valid, please try again.")
+                            # Checks if the same item is already equipped
+                            if self.equipped_items[-1][equipped_item_types.index(i)] == new_items[-1][index_nit]:
+                                print(
+                                    f"{self.name} already has a(n) {data.items.get(self.equipped_items[-1])}")
+                            else:
+                                #  Informs the user that an item of that type is already equipped
+                                print(
+                                    f"As {self.name} already has a(n) {i} you will have to pick which {i} to equip")
+                                # Gets the str form of the stats of the new items
+                                cur_item = data.items.get(
+                                    self.equipped_items[-1][equipped_item_types.index(i)])
+                                stat_of_cur_item = [cur_item[3]]
+
+                                new_item = data.items.get(
+                                    new_items[-1][index_nit])
+                                stat_of_new_item = [new_item[3]]
+
+                                stat_of_cur_item_str = self.apply_stat_changes(
+                                    stat_of_cur_item, True)
+                                stat_of_new_item_str = self.apply_stat_changes(
+                                    stat_of_new_item, True)
+                                #  Asks the user to choose which item they want
+                                while True:
+                                    choice = input(
+                                        f"Would you like to keep your current {i} which {stat_of_cur_item_str} or equip the new item which {stat_of_new_item_str}? Enter 1 for current item or 2 for new item: ")
+                                    if choice == 1:
+                                        # Keeping the current item
+                                        break
+                                    elif choice == 2:
+                                        # Choosing the new item
+                                        self.equipped_items[-1].pop(
+                                            equipped_item_types.index(i))
+                                        self.equipped_items.pop(
+                                            equipped_item_types.index(i))
+                                        added_items.append(
+                                            new_items[index_nit])
+                                        added_items[-1].append(new_items[-1]
+                                                               [index_nit])
+                                    else:
+                                        # Invalid choice
+                                        print(
+                                            "That choice wasn't valid, please try again.")
                         # Otherwise checks if the amount currently equipped
                         # is less than the max amount allowed
                         elif equipped_item_types.count(i) < data.items.get("regular_item_types").get(i):
-                            added_items.append(new_items[index_nit])
+                            added_items.insert(-1, new_items[index_nit])
                             added_items[-1].append(new_items[-1][index_nit])
                         else:
                             print(
                                 f"{self.name} couldn't equip {new_items[index_nit]} because they already have the max amount they can hold of its type")
                     else:
-                        added_items.append(new_items[index_nit])
+                        added_items.insert(-1, new_items[index_nit])
                         added_items[-1].append(new_items[-1][index_nit])
                     index_nit += 1
             else:
-                for i in new_items:
-                    if isinstance(i, list):
-                        added_items.insert(-1, i)
-                    else:
-                        added_items.append(i)
+                added_items = new_items.copy()
 
             item_changes = []
             for i in added_items[-1]:
@@ -238,7 +252,8 @@ class Character():
 
             for i in added_items:
                 if isinstance(i, list):
-                    self.equipped_items[-1].append(i)
+                    for j in i:
+                        self.equipped_items[-1].append(j)
                 else:
                     self.equipped_items.insert(-1, i)
 
@@ -269,8 +284,6 @@ class Character():
         item_drops += temp_class[2]
         item_drops = list(set(item_drops))
 
-        self.apply_stat_changes(temp_class[3])
-
         self.name = name
         self.health = health
         self.attack = attack
@@ -281,8 +294,22 @@ class Character():
         self.equipped_items = [[]]
         self.max_drops = max_drops
 
+        self.apply_stat_changes(temp_class[3])
+
     def __str__(self):
-        return f"Character's name is {self.name}, they have {self.health} health and {self.attack} attack"
+        item_str = ""
+        if self.equip_items:
+            item_str = "no"
+        else:
+            for i in self.equipped_items[0:-1]:
+                if i == self.equipped_items[0:-1][-1]:
+                    print_str = print_str + i + ". "
+                elif i == self.equipped_items[0:-1][-2]:
+                    print_str = print_str + i + " and "
+                else:
+                    print_str = print_str + i + ", "
+
+        return f"Character's name is {self.name}, they have {self.health} health, {self.attack} attack, {self.mana} mana, {self.ammo} ammo and has {item_str} item(s)"
 
 
 def get_random_enemy():
@@ -346,7 +373,3 @@ def get_random_greeting(char):
     rand_greet = data.fight_intro[random.randint(0, greet_range)]
     greeting = rand_greet[0] + char.name + rand_greet[1]
     return greeting
-
-
-# test_li = 1
-# print(isinstance(test_li, list))

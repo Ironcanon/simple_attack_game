@@ -83,7 +83,7 @@ def player_turn(enemy, player, player_name):
 
     while True:
         choice = input(
-            "\nChoose an attack or enter '?' to check available ammo and/or mana: ")
+            "\nChoose an attack or enter '?' to check player stats: ")
         if choice in available_attacks:
             attack = characters.get_attack(choice)
             attack_check = input(
@@ -97,15 +97,7 @@ def player_turn(enemy, player, player_name):
                 print(
                     "That choice wasn't valid (a valid response would be 'yes', enter or '?'), please try again.")
         elif choice == '?':
-            if player.ammo == 0 and player.mana == 0:
-                print(f"{player_name} has no ammo nor mana.")
-            elif player.ammo == 0:
-                print(f"{player_name} has {player.mana} mana")
-            elif player.mana == 0:
-                print(f"{player_name} has {player.ammo} ammo")
-            else:
-                print(
-                    f"{player_name} has {player.mana} mana and {player.ammo} ammo")
+            print(player)
         else:
             print(
                 "That choice wasn't valid (a valid response would be '?' or an attack name), please try again.")
@@ -113,7 +105,7 @@ def player_turn(enemy, player, player_name):
 
 
 def enemy_turn(enemy, player):
-    print("It is the enemy's turn")
+    print("It is the enemy's turn", end="")
     enemy.attacks.sort(reverse=True)
     for i in enemy.attacks:
         attack_check = data.attacks.get(i)[1]

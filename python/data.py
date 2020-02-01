@@ -63,7 +63,7 @@ items = {
     2: ["dented helmet", "Seems like it failed its last wearer, second time lucky.", "helmet", "h+3", 0.3],
     3: ["torn leggings", "Looks like it went through a wood chipper.", "leggings", "h+3", 0.3],
     4: ["holy boots", "Because they have lots of holes, get it.", "boots", "h+2", 0.4],
-    5: ["chipped sword", "This sword has seen many battles but was never used for long, I wonder why.", "boots", "d+3", 0.2],
+    5: ["chipped sword", "This sword has seen many battles but was never used for long, I wonder why.", "weapon", "d+3", 0.2],
     6: ["worn shield", "Might actually be better off without it.", "offhand", "h+4", 0.25],
     7: ["blue ring", "Seems like an ordinary ring not going to lie", "ring", "m+5", 0.5],
     8: ["bone", "An old, flaky bone, just what I wanted for christmas", "rubish", "n", 0.9],
