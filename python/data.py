@@ -20,7 +20,7 @@ enemy_races = {
 }
 
 player_races = {
-    # layout = ["name" , health, attack, ammo, mana, [ex_attacks], [item_drops], max_drops]
+    # layout = ["name" , health, attack, ammo, mana, [ex_attacks]]
     100: ["Human", 60, 10.0, 0, 0, []],
     101: ["Elf", 50, 10.0, 4, 20, [1, 2]],
     102: ["Dwarf", 50, 10.0, 0, 20, [3]]
