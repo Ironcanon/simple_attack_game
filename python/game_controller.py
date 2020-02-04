@@ -1,29 +1,83 @@
 import characters
 import data
 import random
+import saves
 
 player_name = ""
 player_char = None
 
 
 def game():
-    kill_count = 0
-    player_info = game_setup()
+    rounds = 0
+    player_info = []
+
+    print("\n\n\n\tWelcome to Dungoner!\n")
+
+    welcome_str = "Would you like to start a new game"
+    if saves.is_save_file():
+        welcome_str += ", load an existing save"
+    welcome_str += " or check the help? : "
+
+    while True:
+        choice = input(welcome_str)
+        if choice.lower()[0] == 'n':
+            player_info = new_game_setup()
+            break
+        elif saves.is_save_file() and choice.lower()[0] == 'l':
+
+            print("The current saves are: ", end="")
+            for i in saves.get_save_names():
+                if i == saves.get_save_names()[-1]:
+                    print(i, end=". ")
+                elif i == saves.get_save_names()[-2]:
+                    print(i, end=" and ")
+                else:
+                    print(i, end=", ")
+
+            while True:
+                save_choice = input(
+                    "Which save would you like to load? : ").lower()
+                if save_choice in saves.get_save_names():
+                    break
+                else:
+                    print("That response was invalid, please try again")
+
+            loaded_save = saves.load_save(save_choice)
+
+            player_name = loaded_save[0]
+
+            temp_char = characters.Character([0, 0])
+            temp_char.health = loaded_save[1]
+            temp_char.attack = loaded_save[2]
+            temp_char.ammo = loaded_save[3]
+            temp_char.mana = loaded_save[4]
+            temp_char.attacks = loaded_save[5]
+            temp_char.equiped_items = loaded_save[6]
+            rounds = loaded_save[7]
+
+            player_char = temp_char
+            break
+
+        elif choice.lower()[0] == 'h':
+            with open("help.txt", mode="r") as help_file:
+                for i in help_file.readlines:
+                    print(i, end="")
+        else:
+            print("That response was invalid, please try again (valid responses are 'new game', 'load game' or 'help')")
+
     player_name, player_char = player_info[0], player_info[1]
     while player_char.health > 0:
-        reg_round(player_char, player_name)
-        kill_count += 1
+        reg_round(player_char, player_name, rounds)
+        rounds += 1
     else:
-        return f"\n\tGAME OVER\n\tYou managed to kill {kill_count} enemy(s)\n\tThanks for playing!\n\tCreated by Alexander Pezarro\n"
+        return f"\n\tGAME OVER\n\tYou managed to pass {rounds} round(s)\n\tThanks for playing!\n\tCreated by Alexander Pezarro\n"
 
 
-def game_setup():
-
-    print("\n\n\n\tThe Game!\n")
+def new_game_setup():
 
     char_name = input("Please enter your characters name: ")
 
-    print(f"Wellcome {char_name}!")
+    print(f"Welcome {char_name}!")
     print("It's time to choose your character, first choose a race.\n")
 
     avalible_races = data.get_playable_races(True)
@@ -31,10 +85,10 @@ def game_setup():
     print("The avalible races are: ", end="")
 
     for i in avalible_races:
-        if i == avalible_races[-2]:
-            print(i, end=" and ")
-        elif i == avalible_races[-1]:
+        if i == avalible_races[-1]:
             print(i, end=". ")
+        elif i == avalible_races[-2]:
+            print(i, end=" and ")
         else:
             print(i, end=", ")
 
@@ -117,7 +171,7 @@ def enemy_turn(enemy, player):
     return "Enemy's turn is finished\n"
 
 
-def reg_round(player, player_name):
+def reg_round(player, player_name, round_number):
     enemy = characters.get_random_enemy()
     print("An enemy has appeared!")
     print(characters.get_random_greeting(enemy), end="\n\n")
@@ -129,6 +183,10 @@ def reg_round(player, player_name):
                 f"Congradulations {player_name} you defeated the {enemy.name}!\n")
             items = data.drop_items(enemy.item_drops, enemy.max_drops)
             player.equip_items(items)
+            choice = input(
+                "Would you like to save the game? (enter 'yes' to save or anything else to continue): ")
+            if choice.lower()[0] == 'y':
+                print(saves.save(player_name, player, round_number))
             break
         else:
             print(enemy_turn(enemy, player))
