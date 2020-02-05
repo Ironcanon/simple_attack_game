@@ -14,7 +14,7 @@ def game():
     print("\n\n\n\tWelcome to Dungoner!\n")
 
     welcome_str = "Would you like to start a new game"
-    if saves.is_save_file():
+    if saves.get_save_names():
         welcome_str += ", load an existing save"
     welcome_str += " or check the help? : "
 
@@ -22,9 +22,9 @@ def game():
         choice = input(welcome_str)
         if choice.lower()[0] == 'n':
             player_info = new_game_setup()
+            player_name, player_char = player_info[0], player_info[1]
             break
-        elif saves.is_save_file() and choice.lower()[0] == 'l':
-
+        elif saves.get_save_names() and choice.lower()[0] == 'l':
             print("The current saves are: ", end="")
             for i in saves.get_save_names():
                 if i == saves.get_save_names()[-1]:
@@ -65,10 +65,8 @@ def game():
         else:
             print("That response was invalid, please try again (valid responses are 'new game', 'load game' or 'help')")
 
-    player_name, player_char = player_info[0], player_info[1]
     while player_char.health > 0:
-        reg_round(player_char, player_name, rounds)
-        rounds += 1
+        rounds = reg_round(player_char, player_name, rounds)
     else:
         return f"\n\tGAME OVER\n\tYou managed to pass {rounds} round(s)\n\tThanks for playing!\n\tCreated by Alexander Pezarro\n"
 
@@ -187,12 +185,12 @@ def reg_round(player, player_name, round_number):
                 "Would you like to save the game? (enter 'yes' to save or anything else to continue): ")
             if choice.lower()[0] == 'y':
                 print(saves.save(player_name, player, round_number))
-            break
+            return round_number + 1
         else:
             print(enemy_turn(enemy, player))
         if player.health == 0:
             print(f"{player_name} was defeated by the {enemy.name}\n")
-            break
+            return round_number
 
 
 print(game())
