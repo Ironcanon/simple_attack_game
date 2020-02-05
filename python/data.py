@@ -13,23 +13,27 @@ status_effects: {
     0: ["Stunned", "You will miss the next turn"]
 }
 enemy_races = {
-    # layout = ["name" , health, attack, ammo, mana, [ex_attacks], [item_drops], max_drops]
+    # layout = ["name" , health, attack, ammo, mana, [extra_attacks], [item_drops], max_drops]
+    # cause I'm lazy 0: ["",0,0.0,0,0,[],[],0]
     0: ["Skeleton", 20, 5.0, 0, 0, [], [8], 3],
-    1: ["Zombie", 35, 4.0, 0, 0, [], [9], 3]
+    1: ["Zombie", 35, 4.5, 0, 0, [], [9], 3],
+    2: ["Dark elf", 30, 6.0, 0, 20, [2], [0], 4],
+    3: ["Orge", 40, 4.0, 0, 0, [], [], 0]
 
 }
 
 player_races = {
-    # layout = ["name" , health, attack, ammo, mana, [ex_attacks]]
+    # layout = ["name" , health, attack, ammo, mana, [extra_attacks]]
     100: ["Human", 60, 10.0, 0, 0, []],
-    101: ["Elf", 50, 10.0, 4, 20, [1, 2]],
-    102: ["Dwarf", 50, 10.0, 0, 20, [3]]
+    101: ["Elf", 50, 9.0, 0, 20, [2]],
+    102: ["Dwarf", 45, 10.0, 0, 20, [3]],
+    103: ["Gnome", 40, 10.0, 5, 0, [1]]
 }
 
 classes = {
     # layout = ["name", [attacks],[item_drops], [changes]]
     0: ["soldier", [0], [2, 4, 5], ["h+10", "d+2"]],
-    1: ["mage", [0, 2], [3, 7], ["m+50"]],
+    1: ["mage", [0, 2], [3, 7], ["m+40"]],
     2: ["tank", [0], [1, 6], ["h*2", "d*0.7"]],
     3: ["archer", [0, 1], [0, 3, 4], ["a+10"]],
     100: ["boss", [], [], ["h*1.5", "d*2", "a*2", "m*2"]],
