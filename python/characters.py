@@ -1,65 +1,16 @@
 import random
-import data
+from items import items, drop_items
+from races import player_races, enemy_races, get_all_races, get_enemy_races, get_playable_races, is_race_valid
+from classes import classes, get_all_classes, get_assignable_classes, is_class_valid
 
-
-def attack_basic(char, target, check=False):
-    if not check:
-        target.health -= char.attack
-        target.health = round(target.health, 1)
-        if target.health <= 0:
-            target.health = 0
-        return(f"\n{char.name} attacked {target.name} for {char.attack} damage!\n{target.name} has {target.health} health left.")
-    else:
-        # layout = ["attack_cost_sescription", mana_cost, ammo_cost]
-        return [f"This attack will do {char.attack} dammage and is free", 0, 0]
-
-
-def attack_archer_basic(char, target, check=False):
-    if not check:
-        if char.ammo > 0:
-            target.health -= (char.attack + 5)
-            target.health = round(target.health, 1)
-            char.ammo -= 1
-            if target.health <= 0:
-                target.health = 0
-            return(f"\n{char.name} shot {target.name} for {char.attack + 5} damage!\n{target.name} has {target.health} health left.")
-        else:
-            return(f"\n{char.name} is out of arrows so the attack failed!")
-    else:
-        # layout = ["attack_cost_sescription", mana_cost, ammo_cost]
-        return [f"This attack will do {char.attack + 5} dammage and costs 1 ammo", 0, 1]
-
-
-def attack_mage_basic(char, target, check=False):
-    if not check:
-        if char.mana >= 5:
-            target.health -= (char.attack * 1.5)
-            target.health = round(target.health, 1)
-            char.mana -= 5
-            if target.health <= 0:
-                target.health = 0
-            return(f"\n{char.name} blasted {target.name} for {char.attack * 1.5} damage!\n{target.name} has {target.health} health left.")
-        else:
-            return(f"\n{char.name} is out of mana so the attack failed!")
-    else:
-        # layout = ["attack_cost_sescription", mana_cost, ammo_cost]
-        return [f"This attack will do {char.attack * 1.5} dammage and costs 5 mana", 5, 0]
-
-
-def attack_dwarf_slam(char, target, check=False):
-    if not check:
-        if char.mana >= 10:
-            target.health -= (char.attack * 2)
-            target.health = round(target.health, 1)
-            char.mana -= 10
-            if target.health <= 0:
-                target.health = 0
-            return(f"\n{char.name} slammed {target.name} for {char.attack * 2} damage!\n{target.name} has {target.health} health left.")
-        else:
-            return(f"\n{char.name} is out of mana so the attack failed!")
-    else:
-        # layout = ["attack_cost_sescription", mana_cost, ammo_cost]
-        return [f"This attack will do {char.attack * 2} dammage and costs 10 mana", 10, 0]
+fight_intro = {
+    # The name of the enemy is placed between the two strings
+    0: ["The ", " roars a challange."],
+    1: ["Head down, the ", " prepares for a fight."],
+    2: ["The ", " has been staring at you for some time, I think it wants a fight."],
+    3: ["You caught the ", " unaware, make the most of it."],
+    4: ["The ", " caught you by suprise, get ready to fight."]
+}
 
 
 class Character():
@@ -172,12 +123,12 @@ class Character():
                 # Itterates through the item id's of the currently equipped items,
                 # gets their item type and adds it to a list
                 for i in self.equipped_items[-1]:
-                    temp_item = data.items.get(i)
+                    temp_item = items.get(i)
                     equipped_item_types.append(temp_item[2])
                 # Itterates through the item id's of the new items,
                 # gets their item type and adds it to a list
                 for i in new_items[-1]:
-                    temp_item = data.items.get(i)
+                    temp_item = items.get(i)
                     new_item_types.append(temp_item[2])
                 # Itterates through the new_item_types_list
                 index_nit = 0
@@ -185,21 +136,21 @@ class Character():
                     # Checks if each type is already present
                     if i in equipped_item_types:
                         # Checks whether that item type is unique
-                        if i in data.items.get("unique_item_types"):
+                        if i in items.get("unique_item_types"):
                             # Checks if the same item is already equipped
                             if self.equipped_items[-1][equipped_item_types.index(i)] == new_items[-1][index_nit]:
                                 print(
-                                    f"{self.name} already has a(n) {data.items.get(self.equipped_items[-1])}")
+                                    f"{self.name} already has a(n) {items.get(self.equipped_items[-1])}")
                             else:
                                 #  Informs the user that an item of that type is already equipped
                                 print(
                                     f"As {self.name} already has a(n) {i} you will have to pick which {i} to equip")
                                 # Gets the str form of the stats of the new items
-                                cur_item = data.items.get(
+                                cur_item = items.get(
                                     self.equipped_items[-1][equipped_item_types.index(i)])
                                 stat_of_cur_item = [cur_item[3]]
 
-                                new_item = data.items.get(
+                                new_item = items.get(
                                     new_items[-1][index_nit])
                                 stat_of_new_item = [new_item[3]]
 
@@ -230,7 +181,7 @@ class Character():
                                             "That choice wasn't valid, please try again.")
                         # Otherwise checks if the amount currently equipped
                         # is less than the max amount allowed
-                        elif equipped_item_types.count(i) < data.items.get("regular_item_types").get(i):
+                        elif equipped_item_types.count(i) < items.get("regular_item_types").get(i):
                             added_items.insert(-1, new_items[index_nit])
                             added_items[-1].append(new_items[-1][index_nit])
                         else:
@@ -245,7 +196,7 @@ class Character():
 
             item_changes = []
             for i in added_items[-1]:
-                temp_item = data.items.get(i)
+                temp_item = items.get(i)
                 item_changes.append(temp_item[3])
 
             self.apply_stat_changes(item_changes)
@@ -262,7 +213,7 @@ class Character():
         item_drops = []
         max_drops = []
 
-        temp_race = data.get_all_races().get(atributes[0], 0)
+        temp_race = get_all_races().get(atributes[0], 0)
 
         name = temp_race[0]
         health = temp_race[1]
@@ -275,7 +226,7 @@ class Character():
             item_drops = temp_race[6]
             max_drops = temp_race[7]
 
-        temp_class = data.classes.get(atributes[1], 0)
+        temp_class = classes.get(atributes[1], 0)
 
         name = name + " " + temp_class[0]
         attacks += temp_class[1]
@@ -315,10 +266,10 @@ class Character():
 def get_random_enemy():
     enemy_atributes = []
 
-    num_possible_races = len(data.get_enemy_races())
+    num_possible_races = len(get_enemy_races())
     enemy_atributes.append(random.randint(0, num_possible_races-1))
 
-    possible_classes = data.get_assignable_classes()
+    possible_classes = get_assignable_classes()
     num_possible_classes = len(possible_classes)
     enemy_atributes.append(random.randint(0, num_possible_classes-1))
 
@@ -327,15 +278,15 @@ def get_random_enemy():
 
 
 def get_player(race="", classe=""):
-    if data.is_race_valid(race) and data.is_class_valid(classe):
+    if is_race_valid(race) and is_class_valid(classe):
         player_race = 0
         player_class = 0
 
-        for i in data.player_races.items():
+        for i in player_races.items():
             if i[1][0] == race:
                 player_race = i[0]
                 break
-        for i in data.get_assignable_classes().items():
+        for i in get_assignable_classes().items():
             if i[1][0] == classe:
                 player_class = i[0]
                 break
@@ -349,27 +300,12 @@ def get_available_attacks(char):
     possible_attacks = []
     attacks = char.attacks
     for i in attacks:
-        possible_attacks.append(data.attacks.get(i, "")[1])
+        possible_attacks.append(attacks.get(i, "")[1])
     return possible_attacks
 
 
-def get_attack(attack=""):
-    for i in data.attacks.items():
-        if i[1][1] == attack:
-            attack_id = i[0]
-            break
-    if attack_id == 0:
-        return attack_basic
-    elif attack_id == 1:
-        return attack_archer_basic
-    elif attack_id == 2:
-        return attack_mage_basic
-    elif attack_id == 3:
-        return attack_dwarf_slam
-
-
 def get_random_greeting(char):
-    greet_range = len(data.fight_intro)-1
-    rand_greet = data.fight_intro[random.randint(0, greet_range)]
+    greet_range = len(fight_intro)-1
+    rand_greet = fight_intro[random.randint(0, greet_range)]
     greeting = rand_greet[0] + char.name + rand_greet[1]
     return greeting
