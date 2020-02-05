@@ -1,0 +1,4 @@
+#save1
+Alex,46.6,10.0,0,40.0,[0, 2, 3],['old chestplate', 'rotten flesh', [1, 9]],0
+#save1
+Alex,39.6,10.0,0,30.0,[0, 2, 3],['old chestplate', 'rotten flesh', 'bone', [1, 9, 8]],1
