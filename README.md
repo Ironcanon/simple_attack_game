@@ -1,2 +1,2 @@
-# simple_attack_game
+# The dugeoner
 A simple text game that I'm using to improve my python
