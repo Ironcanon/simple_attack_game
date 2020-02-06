@@ -7,7 +7,7 @@ def is_save_file():
 
 
 def load_save(save_name=""):
-    modified_save_name = "#" + save_name
+    modified_save_name = "#" + save_name + '\n'
     with open("save.txt", mode='r') as save_file:
         save_lines = save_file.readlines()
         for i in range(len(save_lines)-1):
