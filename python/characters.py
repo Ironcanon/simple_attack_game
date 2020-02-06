@@ -1,4 +1,5 @@
 import random
+import attacks
 from items import items, drop_items
 from races import player_races, enemy_races, get_all_races, get_enemy_races, get_playable_races, is_race_valid
 from classes import classes, get_all_classes, get_assignable_classes, is_class_valid
@@ -12,6 +13,14 @@ fight_intro = {
     4: ["The ", " caught you by suprise, get ready to fight."]
 }
 
+status_effects: {
+    # layout = ["name", "description", effect, duration]
+    0: ["stunned", "they will miss this turn", "ds", 1],
+    1: ["burnt", "they will take 5 damage at the beginning of your turn for the next 5 turns", "dh-5", 5],
+    2: ["refreshed", "they will be cured of all status effects at the beginning of your next turn", "bc", 1],
+    3: ["strengthened", "they attack will be increased by 5 for the next 5 rounds", "bd+5", 5]
+}
+
 
 class Character():
     name = ""
@@ -19,10 +28,13 @@ class Character():
     attack = 0
     ammo = 0
     mana = 0
+    max_drops = 0
     attacks = []
     item_drops = []
     equipped_items = []
-    max_drops = 0
+    status_effects = []
+    # Format [can_atttack, "reason"]
+    can_attack = True
 
     def apply_stat_changes(self, changes=[], check=False):
         if not check:
@@ -208,6 +220,71 @@ class Character():
                 else:
                     self.equipped_items.insert(-1, i)
 
+    def apply_status_effects(self):
+        buffs = []
+        debuffs = []
+        clear_debuffs = False
+        effects_str = ""
+        # Itterates through the char's status effects stored in format [status_id,duration_left]
+        for i in self.status_effects:
+            effect = status_effects.get(i[0])
+            # Checks if the effect is a buff
+            if effect[2][0] == 'b':
+                # Checks if it is refresh
+                if effect[2][1] == 'c':
+                    clear_debuffs = True
+                else:
+                    # Adds the effect's stat change, the dur left and the effect id
+                    buffs.append([effect[2], i[1], i[0]])
+            else:
+                debuffs.append([effect[2], i[1], i[0]])
+        # Empties the char's status effects and defaults the can_attack bool
+        self.status_effects.clear()
+        self.can_attack = True
+        # If char had refresh removes any debuffs
+        if clear_debuffs:
+            debuffs.clear()
+        # Itterates over debuffs applying effects and adding them to an output string
+        for i in debuffs:
+            effect = status_effects.get(i[2])
+            effects_str += f"{self.name} is {effect[0]} so {effect[1]}\n"
+            if i[0][1:] == 's':
+                self.can_attack = False
+            self.apply_stat_changes([i[0][1:]])
+            i[1] -= 1
+            # If the remaining duration is 0 removes that effect
+            if i[1] == 0:
+                debuffs.remove(i)
+        # Does the same for buffs
+        for i in buffs:
+            effect = status_effects.get(i[2])
+            effects_str += f"You are {effect[0]} so {effect[1]}\n"
+
+            self.apply_stat_changes([i[0][1:]])
+            i[1] -= 1
+            if i[1] == 0:
+                buffs.remove(i)
+        # Joins the remaining effects
+        effects = buffs.extend(debuffs)
+        for i in effects:
+            # Re-enters the effects
+            self.status_effects.append([i[2], i[1]])
+        # Returns the output string
+        return effects_str
+
+    def get_available_attacks(self):
+        possible_attacks = []
+        pos_attacks = self.attacks
+        for i in pos_attacks:
+            possible_attacks.append(attacks.attacks.get(i, "")[1])
+        return possible_attacks
+
+    def get_random_greeting(self):
+        greet_range = len(fight_intro)-1
+        rand_greet = fight_intro[random.randint(0, greet_range)]
+        greeting = rand_greet[0] + self.name + rand_greet[1]
+        return greeting
+
     def __init__(self, atributes=[]):
 
         item_drops = []
@@ -294,18 +371,3 @@ def get_player(race="", classe=""):
 
         temp_char = Character(player_attributes)
         return temp_char
-
-
-def get_available_attacks(char):
-    possible_attacks = []
-    attacks = char.attacks
-    for i in attacks:
-        possible_attacks.append(attacks.get(i, "")[1])
-    return possible_attacks
-
-
-def get_random_greeting(char):
-    greet_range = len(fight_intro)-1
-    rand_greet = fight_intro[random.randint(0, greet_range)]
-    greeting = rand_greet[0] + char.name + rand_greet[1]
-    return greeting

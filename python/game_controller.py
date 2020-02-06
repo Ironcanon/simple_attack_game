@@ -1,8 +1,9 @@
 import random
+import time
 from saves import check_save_name, get_save_names, is_save_file, load_save, save
 from classes import get_assignable_classes, is_class_valid
 from races import is_race_valid, get_playable_races
-from characters import Character, get_player, get_available_attacks, get_random_enemy, get_random_greeting
+from characters import Character, get_player, get_random_enemy
 from attacks import get_attack, attacks
 from items import drop_items
 
@@ -127,56 +128,61 @@ def new_game_setup():
 
 def player_turn(enemy, player, player_name):
     print(f"It is {player_name}'s turn")
-    print("The available attacks are: ", end="")
-    available_attacks = get_available_attacks(player)
-    for i in available_attacks:
-        if i == available_attacks[-1]:
-            print(i, end=". ")
-        elif i == available_attacks[-2]:
-            print(i, end=" and ")
-        else:
-            print(i, end=", ")
+    print(player.apply_status_effects(), end="")
 
-    while True:
-        choice = input(
-            "\nChoose an attack or enter '?' to check player stats: ")
-        if choice in available_attacks:
-            attack = get_attack(choice)
-            attack_check = input(
-                f"Are you sure you want to use {choice}? Enter 'yes' or enter to attack or '?' to check attack details: ")
-            if not attack_check or attack_check.lower()[0] == 'y':
-                print(attack(player, enemy))
-                break
-            elif attack_check == '?':
-                print(attack(player, enemy, True)[0])
+    if player.can_attack:
+        print("The available attacks are: ", end="")
+        available_attacks = player.get_available_attacks()
+        for i in available_attacks:
+            if i == available_attacks[-1]:
+                print(i, end=". ")
+            elif i == available_attacks[-2]:
+                print(i, end=" and ")
+            else:
+                print(i, end=", ")
+
+        while True:
+            choice = input(
+                "\nChoose an attack or enter '?' to check player stats: ")
+            if choice in available_attacks:
+                attack = get_attack(choice)
+                attack_check = input(
+                    f"Are you sure you want to use {choice}? Enter 'yes' or enter to attack or '?' to check attack details: ")
+                if not attack_check or attack_check.lower()[0] == 'y':
+                    print(attack(player, enemy))
+                    break
+                elif attack_check == '?':
+                    print(attack(player, enemy, True)[0])
+                else:
+                    print(
+                        "That choice wasn't valid (a valid response would be 'yes', enter or '?'), please try again.")
+            elif choice == '?':
+                print(player)
             else:
                 print(
-                    "That choice wasn't valid (a valid response would be 'yes', enter or '?'), please try again.")
-        elif choice == '?':
-            print(player)
-        else:
-            print(
-                "That choice wasn't valid (a valid response would be '?' or an attack name), please try again.")
+                    "That choice wasn't valid (a valid response would be '?' or an attack name), please try again.")
     return f"{player_name}'s turn is finished\n"
 
 
 def enemy_turn(enemy, player):
-    print("It is the enemy's turn", end="")
-    enemy.attacks.sort(reverse=True)
-    for i in enemy.attacks:
-        attack_check = attacks.get(i)[1]
-        attack = get_attack(attack_check)
-        check_str = attack(enemy, player, True)
-        if enemy.mana >= check_str[1] and enemy.ammo >= check_str[2]:
-            print(attack(enemy, player))
-            break
+    print("It is the enemy's turn")
+    print(enemy.apply_status_effects(), end="")
+    if enemy.can_attack:
+        enemy.attacks.sort(reverse=True)
+        for i in enemy.attacks:
+            attack_check = attacks.get(i)[1]
+            attack = get_attack(attack_check)
+            check_str = attack(enemy, player, True)
+            if enemy.mana >= check_str[1] and enemy.ammo >= check_str[2]:
+                print(attack(enemy, player))
+                break
     return "Enemy's turn is finished\n"
 
 
 def reg_round(player, player_name, round_number):
     enemy = get_random_enemy()
     print("An enemy has appeared!")
-    print(get_random_greeting(enemy), end="\n\n")
+    print(enemy.get_random_greeting(), end="\n\n")
 
     while True:
         print(player_turn(enemy, player, player_name))
@@ -192,6 +198,7 @@ def reg_round(player, player_name, round_number):
             return round_number + 1
         else:
             print(enemy_turn(enemy, player))
+
         if player.health == 0:
             print(f"{player_name} was defeated by the {enemy.name}\n")
             return round_number
