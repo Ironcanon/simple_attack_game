@@ -1,5 +1,7 @@
 import random
 import time
+import ast
+import re
 from saves import check_save_name, get_save_names, is_save_file, load_save, save
 from classes import get_assignable_classes, is_class_valid
 from races import is_race_valid, get_playable_races
@@ -41,24 +43,38 @@ def game():
 
             while True:
                 save_choice = input(
-                    "Which save would you like to load? : ").lower()
+                    "\nWhich save would you like to load? : ").lower()
                 if save_choice in get_save_names():
                     break
                 else:
                     print("That response was invalid, please try again")
 
+            regex = r"(\[.*\]).(\[.*\])"
+            regex2 = r".\[.*\]"
+            regex3 = r"(\[.*\]).(\[.*\[)"
             loaded_save = load_save(save_choice)
 
             player_name = loaded_save[0]
 
             temp_char = Character([0, 0])
-            temp_char.health = loaded_save[1]
-            temp_char.attack = loaded_save[2]
-            temp_char.ammo = loaded_save[3]
-            temp_char.mana = loaded_save[4]
-            temp_char.attacks = loaded_save[5]
-            temp_char.equiped_items = loaded_save[6]
-            rounds = loaded_save[7]
+            temp_char.health = float(loaded_save[1])
+            temp_char.attack = float(loaded_save[2])
+            temp_char.ammo = float(loaded_save[3])
+            temp_char.mana = float(loaded_save[4])
+
+            attacks = re.search(regex, loaded_save)
+            temp_char.attacks = ast.literal_eval(attacks.group(1))
+
+            item_ids_temp = re.search(regex2, attacks.group(2))
+            item_ids = ast.literal_eval(item_ids_temp.group()[1:-1])
+
+            temp_items = re.search(regex3, loaded_save)
+            items = ast.literal_eval(temp_items.group(2)[:-1] + "'']")
+            items.pop()
+            items.append(item_ids)
+
+            temp_char.equiped_items = items
+            rounds = int(loaded_save[-1][:-2])
 
             player_char = temp_char
             break

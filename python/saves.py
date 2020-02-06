@@ -21,7 +21,7 @@ def get_save_names():
         save_lines = save_file.readlines()
         for i in save_lines:
             if '#' in i:
-                saves.append(i[1:])
+                saves.append(i[1:-1])
         return saves
 
 
