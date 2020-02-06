@@ -193,7 +193,7 @@ def reg_round(player, player_name, round_number):
             player.equip_items(items)
             choice = input(
                 "Would you like to save the game? (enter 'yes' to save or anything else to continue): ")
-            if choice.lower()[0] == 'y':
+            if choice != '' and choice.lower()[0] == 'y':
                 print(save(player_name, player, round_number))
             return round_number + 1
         else:

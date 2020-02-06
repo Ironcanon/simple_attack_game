@@ -265,7 +265,7 @@ class Character():
             if i[1] == 0:
                 buffs.remove(i)
         # Joins the remaining effects
-        effects = buffs.extend(debuffs)
+        effects = buffs + debuffs
         for i in effects:
             # Re-enters the effects
             self.status_effects.append([i[2], i[1]])
