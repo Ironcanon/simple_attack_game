@@ -14,8 +14,7 @@ fight_intro = {
     4: ["The ", " caught you by suprise, get ready to fight."],
     5: ["With a blood curling roar the ", " appears."]
 }
-
-status_effects: {
+status_effects = {
     # layout = ["name", "description", effect, duration]
     0: ["stunned", "they will miss this turn", "ds", 1],
     1: ["burnt", "they will take 5 damage at the beginning of your turn for the next 5 turns", "dh-5", 5],
@@ -35,7 +34,6 @@ class Character():
     item_drops = []
     equipped_items = []
     effects = []
-    # Format [can_atttack, "reason"]
     can_attack = True
 
     def apply_stat_changes(self, changes=[], check=False):
@@ -154,7 +152,7 @@ class Character():
                             # Checks if the same item is already equipped
                             if self.equipped_items[-1][equipped_item_types.index(i)] == new_items[-1][index_nit]:
                                 print(
-                                    f"{self.name} already has a(n) {items.get(self.equipped_items[-1])}")
+                                    f"{self.name} already has a(n) {items.get(self.equipped_items[-1][equipped_item_types.index(i)])[0]}")
                             else:
                                 #  Informs the user that an item of that type is already equipped
                                 print(
@@ -252,7 +250,8 @@ class Character():
             effects_str += f"{self.name} is {effect[0]} so {effect[1]}\n"
             if i[0][1:] == 's':
                 self.can_attack = False
-            self.apply_stat_changes([i[0][1:]])
+            else:
+                self.apply_stat_changes([i[0][1:]])
             i[1] -= 1
             # If the remaining duration is 0 removes that effect
             if i[1] == 0:
