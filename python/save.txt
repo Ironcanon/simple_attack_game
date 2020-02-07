@@ -1,2 +1,4 @@
 #save1
-Alex,29.0,10.0,12.0,0,[0, 1],['holy boots', 'rotten flesh', [4, 9]],0
+Ale,50.0,10.0,1.0,50.0,[0, 2, 3],['torn leggings', 'holy boots', 'arrow', [3, 4, 0]],0
+#save2
+Alex,7.0,10.0,8.0,5.0,[0, 1],['rotten flesh', 'blue ring', 'arrow', [9, 7, 0]],1

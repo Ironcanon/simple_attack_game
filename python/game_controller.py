@@ -49,9 +49,9 @@ def game():
                 else:
                     print("That response was invalid, please try again")
 
-            regex = r"(\[.*\]).(\[.*\])"
+            regex = r"(\[.*\])..(\[.*\])"
             regex2 = r".\[.*\]"
-            regex3 = r"(\[.*\]).(\[.*\[)"
+            regex3 = r"(\[.*\])..(\[.*\[)"
             loaded_save = load_save(save_choice)
 
             player_name = loaded_save[0]
@@ -62,21 +62,39 @@ def game():
             temp_char.ammo = float(loaded_save[3])
             temp_char.mana = float(loaded_save[4])
 
-            attacks = re.search(regex, loaded_save)
+            test_str = str(loaded_save)
+            test_str = test_str[1:-1]
+            test_str = re.sub("'", "", test_str)
+            test_str = re.sub('"', "", test_str)
+            loaded_save_str = test_str[:-2]
+
+            attacks = re.search(regex, loaded_save_str)
             temp_char.attacks = ast.literal_eval(attacks.group(1))
 
             item_ids_temp = re.search(regex2, attacks.group(2))
             item_ids = ast.literal_eval(item_ids_temp.group()[1:-1])
 
-            temp_items = re.search(regex3, loaded_save)
-            items = ast.literal_eval(temp_items.group(2)[:-1] + "'']")
+            temp_items = re.search(regex3, loaded_save_str)
+            temp_items_str = temp_items.group(2)[:-1] + "]"
+            correct_str = ""
+            for i in temp_items_str:
+                if i == '[':
+                    correct_str += i + "'"
+                elif i == ",":
+                    correct_str += "'" + i + "'"
+                elif i == "]":
+                    correct_str += "'" + i
+                else:
+                    correct_str += i
+            items = ast.literal_eval(correct_str)
             items.pop()
             items.append(item_ids)
 
             temp_char.equiped_items = items
-            rounds = int(loaded_save[-1][:-2])
-
+            rounds = int(loaded_save_str[-1])
+            print(rounds)
             player_char = temp_char
+            print("Save loaded!\n")
             break
 
         elif choice.lower()[0] == 'h':
@@ -207,11 +225,12 @@ def reg_round(player, player_name, round_number):
                 f"Congradulations {player_name} you defeated the {enemy.name}!\n")
             items = drop_items(enemy.item_drops, enemy.max_drops)
             player.equip_items(items)
+            round_number += 1
             choice = input(
                 "Would you like to save the game? (enter 'yes' to save or anything else to continue): ")
             if choice != '' and choice.lower()[0] == 'y':
                 print(save(player_name, player, round_number))
-            return round_number + 1
+            return round_number
         else:
             print(enemy_turn(enemy, player))
 

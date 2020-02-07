@@ -1,5 +1,6 @@
 import random
 import attacks
+import re
 from items import items, drop_items
 from races import player_races, enemy_races, get_all_races, get_enemy_races, get_playable_races, is_race_valid
 from classes import classes, get_all_classes, get_assignable_classes, is_class_valid
@@ -11,7 +12,7 @@ fight_intro = {
     2: ["The ", " has been staring at you for some time, I think it wants a fight."],
     3: ["You caught the ", " unaware, make the most of it."],
     4: ["The ", " caught you by suprise, get ready to fight."],
-    5 :["With a blood curling roar the ", " appears."]
+    5: ["With a blood curling roar the ", " appears."]
 }
 
 status_effects: {
@@ -33,7 +34,7 @@ class Character():
     attacks = []
     item_drops = []
     equipped_items = []
-    status_effects = []
+    effects = []
     # Format [can_atttack, "reason"]
     can_attack = True
 
@@ -227,7 +228,7 @@ class Character():
         clear_debuffs = False
         effects_str = ""
         # Itterates through the char's status effects stored in format [status_id,duration_left]
-        for i in self.status_effects:
+        for i in self.effects:
             effect = status_effects.get(i[0])
             # Checks if the effect is a buff
             if effect[2][0] == 'b':
@@ -240,7 +241,7 @@ class Character():
             else:
                 debuffs.append([effect[2], i[1], i[0]])
         # Empties the char's status effects and defaults the can_attack bool
-        self.status_effects.clear()
+        self.effects.clear()
         self.can_attack = True
         # If char had refresh removes any debuffs
         if clear_debuffs:
@@ -269,7 +270,7 @@ class Character():
         effects = buffs + debuffs
         for i in effects:
             # Re-enters the effects
-            self.status_effects.append([i[2], i[1]])
+            self.effects.append([i[2], i[1]])
         # Returns the output string
         return effects_str
 
@@ -372,3 +373,12 @@ def get_player(race="", classe=""):
 
         temp_char = Character(player_attributes)
         return temp_char
+
+
+test_str = str(['Alex', '29.0', '10.0', '12.0', '0', '[0', ' 1]',
+                "['holy boots'", " 'rotten flesh'", ' [4', ' 9]]', '0\n'])
+test_str = test_str[1:-1]
+test_str = re.sub("'", "", test_str)
+test_str = re.sub('"', "", test_str)
+test_str = test_str[:-2]
+print(test_str)

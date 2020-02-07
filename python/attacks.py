@@ -61,7 +61,7 @@ def attack_dwarf_slam(char, target, check=False):
             char.mana -= 10
             effect_chance = random.random()
             if effect_chance < stunned_chance:
-                target.status_effects.append(0)
+                target.effects.append(0)
             if target.health <= 0:
                 target.health = 0
             return(f"\n{char.name} slammed {target.name} for {char.attack * 2} damage!\n{target.name} has {target.health} health left.")
