@@ -10,7 +10,8 @@ fight_intro = {
     1: ["Head down, the ", " prepares for a fight."],
     2: ["The ", " has been staring at you for some time, I think it wants a fight."],
     3: ["You caught the ", " unaware, make the most of it."],
-    4: ["The ", " caught you by suprise, get ready to fight."]
+    4: ["The ", " caught you by suprise, get ready to fight."],
+    5 :["With a blood curling roar the ", " appears."]
 }
 
 status_effects: {
