@@ -86,3 +86,11 @@ def get_attack(attack=""):
         return attack_mage_basic
     elif attack_id == 3:
         return attack_dwarf_slam
+
+
+def get_available_attacks(char):
+    possible_attacks = []
+    pos_attacks = char.attacks
+    for i in pos_attacks:
+        possible_attacks.append(attacks.get(i, "")[1])
+    return possible_attacks

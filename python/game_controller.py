@@ -6,7 +6,7 @@ from saves import check_save_name, get_save_names, is_save_file, load_save, save
 from classes import get_assignable_classes, is_class_valid
 from races import is_race_valid, get_playable_races
 from characters import Character, get_player, get_random_enemy
-from attacks import get_attack, attacks
+from attacks import get_attack, attacks, get_available_attacks
 from items import drop_items
 
 
@@ -166,7 +166,7 @@ def player_turn(enemy, player, player_name):
 
     if player.can_attack:
         print("The available attacks are: ", end="")
-        available_attacks = player.get_available_attacks()
+        available_attacks = get_available_attacks(player)
         for i in available_attacks:
             if i == available_attacks[-1]:
                 print(i, end=". ")

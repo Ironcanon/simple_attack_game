@@ -1,5 +1,4 @@
 import random
-import attacks
 import re
 from items import items, drop_items
 from races import player_races, enemy_races, get_all_races, get_enemy_races, get_playable_races, is_race_valid
@@ -273,13 +272,6 @@ class Character():
         # Returns the output string
         return effects_str
 
-    def get_available_attacks(self):
-        possible_attacks = []
-        pos_attacks = self.attacks
-        for i in pos_attacks:
-            possible_attacks.append(attacks.attacks.get(i, "")[1])
-        return possible_attacks
-
     def get_random_greeting(self):
         greet_range = len(fight_intro)-1
         rand_greet = fight_intro[random.randint(0, greet_range)]
@@ -372,12 +364,3 @@ def get_player(race="", classe=""):
 
         temp_char = Character(player_attributes)
         return temp_char
-
-
-test_str = str(['Alex', '29.0', '10.0', '12.0', '0', '[0', ' 1]',
-                "['holy boots'", " 'rotten flesh'", ' [4', ' 9]]', '0\n'])
-test_str = test_str[1:-1]
-test_str = re.sub("'", "", test_str)
-test_str = re.sub('"', "", test_str)
-test_str = test_str[:-2]
-print(test_str)
