@@ -199,6 +199,7 @@ class Character():
                             print(
                                 f"{self.name} couldn't equip {new_items[index_nit]} because they already have the max amount they can hold of its type")
                     else:
+                        # If item type isn't already equipped, adds it to items to be equipped
                         added_items.insert(-1, new_items[index_nit])
                         added_items[-1].append(new_items[-1][index_nit])
                     index_nit += 1
@@ -207,6 +208,7 @@ class Character():
 
             item_changes = []
             for i in added_items[-1]:
+                # Gets the stat changes from the newly added items
                 temp_item = items.get(i)
                 item_changes.append(temp_item[3])
 
@@ -216,6 +218,8 @@ class Character():
                 if isinstance(i, list):
                     for j in i:
                         self.equipped_items[-1].append(j)
+                elif items.get(added_items[-1][added_items.index(i)])[2] == "once_off_consumable":
+                    added_items[-1][added_items.index(i)].pop()
                 else:
                     self.equipped_items.insert(-1, i)
 
@@ -322,10 +326,10 @@ class Character():
         if self.equip_items:
             item_str = "no"
         else:
-            for i in self.equipped_items[0:-1]:
-                if i == self.equipped_items[0:-1][-1]:
+            for i in self.equipped_items[:-1]:
+                if i == self.equipped_items[:-1][-1]:
                     print_str = print_str + i + ". "
-                elif i == self.equipped_items[0:-1][-2]:
+                elif i == self.equipped_items[:-1][-2]:
                     print_str = print_str + i + " and "
                 else:
                     print_str = print_str + i + ", "

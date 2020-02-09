@@ -57,6 +57,7 @@ def game():
             player_name = loaded_save[0]
 
             temp_char = Character([0, 0])
+            temp_char.name = player_name
             temp_char.health = float(loaded_save[1])
             temp_char.attack = float(loaded_save[2])
             temp_char.ammo = float(loaded_save[3])
@@ -151,7 +152,7 @@ def new_game_setup():
     while not class_choice or not is_class_valid(class_choice):
         class_choice = input(
             "That choice wasn't valid, please try again. Which class would you like? : ").lower()
-    print(f"A {class_choice.capitalize()}, perfect!")
+    print(f"A(n) {class_choice.capitalize()}, perfect!")
 
     player_char = get_player(race_choice, class_choice)
 
