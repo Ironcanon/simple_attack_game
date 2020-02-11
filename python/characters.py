@@ -219,7 +219,8 @@ class Character():
                     for j in i:
                         self.equipped_items[-1].append(j)
                 elif items.get(added_items[-1][added_items.index(i)])[2] == "once_off_consumable":
-                    added_items[-1][added_items.index(i)].pop()
+                    added_items[-1].remove(added_items[-1]
+                                           [added_items.index(i)])
                 else:
                     self.equipped_items.insert(-1, i)
 
