@@ -12,7 +12,7 @@ items = {
     },
     # layout = ["name", "description", "item_type", "stat_changes", drop_chance]
     # cause I'm lazy 0: ["","","","",0]
-    0: ["arrow", "It's an arrow, plain and simple, point sharp end towards enemy and shoot.", "once_off_consumable", "a+1", 0.8],
+    0: ["arrow", "It's an arrow, plain and simple, point sharp end towards enemy and shoot.", "once_off_consumable", "A+1", 0.8],
     1: ["old chestplate", "It's seen better days but it's better than nothing.", "chestplate", "h+5", 0.3],
     2: ["dented helmet", "Seems like it failed its last wearer, second time lucky.", "helmet", "h+3", 0.4],
     3: ["torn leggings", "Looks like it went through a wood chipper.", "leggings", "h+3", 0.4],

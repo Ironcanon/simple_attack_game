@@ -24,9 +24,12 @@ status_effects = {
 
 class Character():
     name = ""
+    max_health = 0
     health = 0
     attack = 0
+    max_ammo = 0
     ammo = 0
+    max_mana = 0
     mana = 0
     max_drops = 0
     attacks = []
@@ -45,6 +48,13 @@ class Character():
 
                     if change_type == 'h':
                         if change_opperator == '+':
+                            self.max_health += float(change_amount)
+                        elif change_opperator == '-':
+                            self.max_health -= float(change_amount)
+                        elif change_opperator == '*':
+                            self.max_health *= float(change_amount)
+                    elif change_type == 'H':
+                        if change_opperator == '+':
                             self.health += float(change_amount)
                         elif change_opperator == '-':
                             self.health -= float(change_amount)
@@ -59,12 +69,26 @@ class Character():
                             self.attack *= float(change_amount)
                     elif change_type == 'a':
                         if change_opperator == '+':
+                            self.max_ammo += float(change_amount)
+                        elif change_opperator == '-':
+                            self.max_ammo -= float(change_amount)
+                        elif change_opperator == '*':
+                            self.max_ammo *= float(change_amount)
+                    elif change_type == 'A':
+                        if change_opperator == '+':
                             self.ammo += float(change_amount)
                         elif change_opperator == '-':
                             self.ammo -= float(change_amount)
                         elif change_opperator == '*':
                             self.ammo *= float(change_amount)
                     elif change_type == 'm':
+                        if change_opperator == '+':
+                            self.max_mana += float(change_amount)
+                        elif change_opperator == '-':
+                            self.max_mana -= float(change_amount)
+                        elif change_opperator == '*':
+                            self.max_mana *= float(change_amount)
+                    elif change_type == 'M':
                         if change_opperator == '+':
                             self.mana += float(change_amount)
                         elif change_opperator == '-':
@@ -311,10 +335,10 @@ class Character():
         item_drops = list(set(item_drops))
 
         self.name = name
-        self.health = health
+        self.health, self.max_health = health
         self.attack = attack
-        self.ammo = ammo
-        self.mana = mana
+        self.ammo, self.max_ammo = ammo
+        self.mana, self.max_mana = mana
         self.attacks = attacks
         self.item_drops = item_drops
         self.equipped_items = [[]]
