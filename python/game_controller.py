@@ -154,9 +154,10 @@ def player_turn(enemy, player, player_name):
                         "\nChoose an attack or enter 'back' to return to the previous choice: ")
                     if choice in available_attacks:
                         attack = get_attack(choice)
+                        attack_name = choice
                         while repeat:
                             choice = input(
-                                f"Are you sure you want to use {choice}? Enter 'yes' or enter to attack, '?' to check attack details or 'back' to return to the previous choice: ")
+                                f"Are you sure you want to use {attack_name}? Enter 'yes' or enter to attack, '?' to check attack details or 'back' to return to the previous choice: ")
                             if not choice or choice.lower()[0] == 'y':
                                 print(attack(player, enemy))
                                 repeat = False

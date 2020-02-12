@@ -19,7 +19,7 @@ def check_save_name(save_name):
     if save_name in get_save_names():
         choice = input(
             "That save name already exists, would you like to override the save? : ")
-        if choice.lower()[0] == 'y':
+        if choice != '' and choice.lower()[0] == 'y':
             return True
         else:
             print(

@@ -46,20 +46,21 @@ class Character():
                     change_opperator = change[1]
                     change_amount = change[2:]
 
-                    if change_type == 'h':
-                        if change_opperator == '+':
-                            self.max_health += float(change_amount)
-                        elif change_opperator == '-':
-                            self.max_health -= float(change_amount)
-                        elif change_opperator == '*':
-                            self.max_health *= float(change_amount)
-                    elif change_type == 'H':
+                    if change_type.upper() == 'H':
+                        if change_type == 'h':
+                            if change_opperator == '+':
+                                self.max_health += float(change_amount)
+                            elif change_opperator == '-':
+                                self.max_health -= float(change_amount)
+                            elif change_opperator == '*':
+                                self.max_health *= float(change_amount)
                         if change_opperator == '+':
                             self.health += float(change_amount)
                         elif change_opperator == '-':
                             self.health -= float(change_amount)
                         elif change_opperator == '*':
                             self.health *= float(change_amount)
+
                     elif change_type == 'd':
                         if change_opperator == '+':
                             self.attack += float(change_amount)
@@ -67,28 +68,30 @@ class Character():
                             self.attack -= float(change_amount)
                         elif change_opperator == '*':
                             self.attack *= float(change_amount)
-                    elif change_type == 'a':
-                        if change_opperator == '+':
-                            self.max_ammo += float(change_amount)
-                        elif change_opperator == '-':
-                            self.max_ammo -= float(change_amount)
-                        elif change_opperator == '*':
-                            self.max_ammo *= float(change_amount)
-                    elif change_type == 'A':
+
+                    elif change_type.upper() == 'A':
+                        if change_type == 'a':
+                            if change_opperator == '+':
+                                self.max_ammo += float(change_amount)
+                            elif change_opperator == '-':
+                                self.max_ammo -= float(change_amount)
+                            elif change_opperator == '*':
+                                self.max_ammo *= float(change_amount)
                         if change_opperator == '+':
                             self.ammo += float(change_amount)
                         elif change_opperator == '-':
                             self.ammo -= float(change_amount)
                         elif change_opperator == '*':
                             self.ammo *= float(change_amount)
-                    elif change_type == 'm':
-                        if change_opperator == '+':
-                            self.max_mana += float(change_amount)
-                        elif change_opperator == '-':
-                            self.max_mana -= float(change_amount)
-                        elif change_opperator == '*':
-                            self.max_mana *= float(change_amount)
-                    elif change_type == 'M':
+
+                    elif change_type.upper() == 'M':
+                        if change_type == 'm':
+                            if change_opperator == '+':
+                                self.max_mana += float(change_amount)
+                            elif change_opperator == '-':
+                                self.max_mana -= float(change_amount)
+                            elif change_opperator == '*':
+                                self.max_mana *= float(change_amount)
                         if change_opperator == '+':
                             self.mana += float(change_amount)
                         elif change_opperator == '-':
@@ -348,7 +351,7 @@ class Character():
 
     def __str__(self):
         item_str = ""
-        if self.equip_items:
+        if self.equipped_items:
             item_str = "no"
         else:
             for i in self.equipped_items[:-1]:
