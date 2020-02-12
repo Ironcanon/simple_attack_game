@@ -39,7 +39,7 @@ def game():
 
             while True:
                 save_choice = input(
-                    "\nWhich save would you like to load? (Type 'back' to go back) : ").lower()
+                    "\nWhich save would you like to load? (Type 'back' to go back) : ")
                 if save_choice in get_save_names():
                     loaded_save = load_save(save_choice)
 
