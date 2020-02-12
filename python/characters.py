@@ -1,4 +1,5 @@
 import random
+import re
 from items import items, drop_items
 from races import player_races, enemy_races, get_all_races, get_enemy_races, get_playable_races, is_race_valid
 from classes import classes, get_all_classes, get_assignable_classes, is_class_valid
@@ -9,20 +10,33 @@ fight_intro = {
     1: ["Head down, the ", " prepares for a fight."],
     2: ["The ", " has been staring at you for some time, I think it wants a fight."],
     3: ["You caught the ", " unaware, make the most of it."],
-    4: ["The ", " caught you by suprise, get ready to fight."]
+    4: ["The ", " caught you by suprise, get ready to fight."],
+    5: ["With a blood curling roar the ", " appears."]
+}
+status_effects = {
+    # layout = ["name", "description", effect, duration]
+    0: ["stunned", "they will miss this turn", "ds", 1],
+    1: ["burnt", "they will take 5 damage at the beginning of your turn for the next 5 turns", "dh-5", 5],
+    2: ["refreshed", "they will be cured of all status effects at the beginning of your next turn", "bc", 1],
+    3: ["strengthened", "they attack will be increased by 5 for the next 5 rounds", "bd+5", 5]
 }
 
 
 class Character():
     name = ""
+    max_health = 0
     health = 0
     attack = 0
+    max_ammo = 0
     ammo = 0
+    max_mana = 0
     mana = 0
+    max_drops = 0
     attacks = []
     item_drops = []
     equipped_items = []
-    max_drops = 0
+    effects = []
+    can_attack = True
 
     def apply_stat_changes(self, changes=[], check=False):
         if not check:
@@ -32,13 +46,21 @@ class Character():
                     change_opperator = change[1]
                     change_amount = change[2:]
 
-                    if change_type == 'h':
+                    if change_type.upper() == 'H':
+                        if change_type == 'h':
+                            if change_opperator == '+':
+                                self.max_health += float(change_amount)
+                            elif change_opperator == '-':
+                                self.max_health -= float(change_amount)
+                            elif change_opperator == '*':
+                                self.max_health *= float(change_amount)
                         if change_opperator == '+':
                             self.health += float(change_amount)
                         elif change_opperator == '-':
                             self.health -= float(change_amount)
                         elif change_opperator == '*':
                             self.health *= float(change_amount)
+
                     elif change_type == 'd':
                         if change_opperator == '+':
                             self.attack += float(change_amount)
@@ -46,14 +68,30 @@ class Character():
                             self.attack -= float(change_amount)
                         elif change_opperator == '*':
                             self.attack *= float(change_amount)
-                    elif change_type == 'a':
+
+                    elif change_type.upper() == 'A':
+                        if change_type == 'a':
+                            if change_opperator == '+':
+                                self.max_ammo += float(change_amount)
+                            elif change_opperator == '-':
+                                self.max_ammo -= float(change_amount)
+                            elif change_opperator == '*':
+                                self.max_ammo *= float(change_amount)
                         if change_opperator == '+':
                             self.ammo += float(change_amount)
                         elif change_opperator == '-':
                             self.ammo -= float(change_amount)
                         elif change_opperator == '*':
                             self.ammo *= float(change_amount)
-                    elif change_type == 'm':
+
+                    elif change_type.upper() == 'M':
+                        if change_type == 'm':
+                            if change_opperator == '+':
+                                self.max_mana += float(change_amount)
+                            elif change_opperator == '-':
+                                self.max_mana -= float(change_amount)
+                            elif change_opperator == '*':
+                                self.max_mana *= float(change_amount)
                         if change_opperator == '+':
                             self.mana += float(change_amount)
                         elif change_opperator == '-':
@@ -140,7 +178,7 @@ class Character():
                             # Checks if the same item is already equipped
                             if self.equipped_items[-1][equipped_item_types.index(i)] == new_items[-1][index_nit]:
                                 print(
-                                    f"{self.name} already has a(n) {items.get(self.equipped_items[-1])}")
+                                    f"{self.name} already has a(n) {items.get(self.equipped_items[-1][equipped_item_types.index(i)])[0]}")
                             else:
                                 #  Informs the user that an item of that type is already equipped
                                 print(
@@ -188,6 +226,7 @@ class Character():
                             print(
                                 f"{self.name} couldn't equip {new_items[index_nit]} because they already have the max amount they can hold of its type")
                     else:
+                        # If item type isn't already equipped, adds it to items to be equipped
                         added_items.insert(-1, new_items[index_nit])
                         added_items[-1].append(new_items[-1][index_nit])
                     index_nit += 1
@@ -196,6 +235,7 @@ class Character():
 
             item_changes = []
             for i in added_items[-1]:
+                # Gets the stat changes from the newly added items
                 temp_item = items.get(i)
                 item_changes.append(temp_item[3])
 
@@ -205,8 +245,70 @@ class Character():
                 if isinstance(i, list):
                     for j in i:
                         self.equipped_items[-1].append(j)
+                elif items.get(added_items[-1][added_items.index(i)])[2] == "once_off_consumable":
+                    added_items[-1].remove(added_items[-1]
+                                           [added_items.index(i)])
                 else:
                     self.equipped_items.insert(-1, i)
+
+    def apply_status_effects(self):
+        buffs = []
+        debuffs = []
+        clear_debuffs = False
+        effects_str = ""
+        # Itterates through the char's status effects stored in format [status_id,duration_left]
+        for i in self.effects:
+            effect = status_effects.get(i[0])
+            # Checks if the effect is a buff
+            if effect[2][0] == 'b':
+                # Checks if it is refresh
+                if effect[2][1] == 'c':
+                    clear_debuffs = True
+                else:
+                    # Adds the effect's stat change, the dur left and the effect id
+                    buffs.append([effect[2], i[1], i[0]])
+            else:
+                debuffs.append([effect[2], i[1], i[0]])
+        # Empties the char's status effects and defaults the can_attack bool
+        self.effects.clear()
+        self.can_attack = True
+        # If char had refresh removes any debuffs
+        if clear_debuffs:
+            debuffs.clear()
+        # Itterates over debuffs applying effects and adding them to an output string
+        for i in debuffs:
+            effect = status_effects.get(i[2])
+            effects_str += f"{self.name} is {effect[0]} so {effect[1]}\n"
+            if i[0][1:] == 's':
+                self.can_attack = False
+            else:
+                self.apply_stat_changes([i[0][1:]])
+            i[1] -= 1
+            # If the remaining duration is 0 removes that effect
+            if i[1] == 0:
+                debuffs.remove(i)
+        # Does the same for buffs
+        for i in buffs:
+            effect = status_effects.get(i[2])
+            effects_str += f"You are {effect[0]} so {effect[1]}\n"
+
+            self.apply_stat_changes([i[0][1:]])
+            i[1] -= 1
+            if i[1] == 0:
+                buffs.remove(i)
+        # Joins the remaining effects
+        effects = buffs + debuffs
+        for i in effects:
+            # Re-enters the effects
+            self.effects.append([i[2], i[1]])
+        # Returns the output string
+        return effects_str
+
+    def get_random_greeting(self):
+        greet_range = len(fight_intro)-1
+        rand_greet = fight_intro[random.randint(0, greet_range)]
+        greeting = rand_greet[0] + self.name + rand_greet[1]
+        return greeting
 
     def __init__(self, atributes=[]):
 
@@ -236,10 +338,10 @@ class Character():
         item_drops = list(set(item_drops))
 
         self.name = name
-        self.health = health
+        self.health, self.max_health = health, health
         self.attack = attack
-        self.ammo = ammo
-        self.mana = mana
+        self.ammo, self.max_ammo = ammo, ammo
+        self.mana, self.max_mana = mana, mana
         self.attacks = attacks
         self.item_drops = item_drops
         self.equipped_items = [[]]
@@ -249,18 +351,18 @@ class Character():
 
     def __str__(self):
         item_str = ""
-        if self.equip_items:
+        if len(self.equipped_items) == 1:
             item_str = "no"
         else:
-            for i in self.equipped_items[0:-1]:
-                if i == self.equipped_items[0:-1][-1]:
-                    print_str = print_str + i + ". "
-                elif i == self.equipped_items[0:-1][-2]:
-                    print_str = print_str + i + " and "
+            for i in self.equipped_items[:-1]:
+                if i == self.equipped_items[:-1][-1]:
+                    item_str = item_str + i
+                if i == self.equipped_items[:-1][-2]:
+                    item_str = item_str + i + " and "
                 else:
-                    print_str = print_str + i + ", "
+                    item_str = item_str + i + ", "
 
-        return f"Character's name is {self.name}, they have {self.health} health, {self.attack} attack, {self.mana} mana, {self.ammo} ammo and has {item_str} item(s)"
+        return f"Character's name is {self.name}, they have {self.health} out of {self.max_health} health, {self.attack} attack, {self.mana} out of {self.max_mana} mana, {self.ammo} out of {self.max_ammo} ammo and has {item_str} item(s)"
 
 
 def get_random_enemy():
@@ -294,18 +396,3 @@ def get_player(race="", classe=""):
 
         temp_char = Character(player_attributes)
         return temp_char
-
-
-def get_available_attacks(char):
-    possible_attacks = []
-    attacks = char.attacks
-    for i in attacks:
-        possible_attacks.append(attacks.get(i, "")[1])
-    return possible_attacks
-
-
-def get_random_greeting(char):
-    greet_range = len(fight_intro)-1
-    rand_greet = fight_intro[random.randint(0, greet_range)]
-    greeting = rand_greet[0] + char.name + rand_greet[1]
-    return greeting

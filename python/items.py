@@ -12,16 +12,19 @@ items = {
     },
     # layout = ["name", "description", "item_type", "stat_changes", drop_chance]
     # cause I'm lazy 0: ["","","","",0]
-    0: ["arrow", "It's an arrow, plain and simple, point sharp end towards enemy and shoot.", "once_off_consumable", "a+1", 0.8],
-    1: ["old chestplate", "It's seen better days but it's better than nothing.", "chestplate", "h+5", 0.2],
-    2: ["dented helmet", "Seems like it failed its last wearer, second time lucky.", "helmet", "h+3", 0.3],
-    3: ["torn leggings", "Looks like it went through a wood chipper.", "leggings", "h+3", 0.3],
-    4: ["holy boots", "Because they have lots of holes, get it.", "boots", "h+2", 0.4],
-    5: ["chipped sword", "This sword has seen many battles but was never used for long, I wonder why.", "weapon", "d+3", 0.2],
-    6: ["worn shield", "Might actually be better off without it.", "offhand", "h+4", 0.25],
+    0: ["arrow", "It's an arrow, plain and simple, point sharp end towards enemy and shoot.", "once_off_consumable", "A+1", 0.8],
+    1: ["old chestplate", "It's seen better days but it's better than nothing.", "chestplate", "h+5", 0.3],
+    2: ["dented helmet", "Seems like it failed its last wearer, second time lucky.", "helmet", "h+3", 0.4],
+    3: ["torn leggings", "Looks like it went through a wood chipper.", "leggings", "h+3", 0.4],
+    4: ["holy boots", "Because they have lots of holes, get it.", "boots", "h+2", 0.5],
+    5: ["chipped sword", "This sword has seen many battles but was never used for long, I wonder why.", "weapon", "d+3", 0.4],
+    6: ["worn shield", "Might actually be better off without it.", "offhand", "h+4", 0.3],
     7: ["blue ring", "Seems like an ordinary ring not going to lie", "ring", "m+5", 0.5],
     8: ["bone", "An old, flaky bone, just what I wanted for christmas", "rubish", "n", 0.9],
-    9: ["rotten flesh", "Eww, just very eww", "rubish", "n", 0.9]
+    9: ["rotten flesh", "Eww, just very eww", "rubish", "n", 0.9],
+    10: ["bandage", "It won't do much but it's better than nothing", "once_off_consumable", "h+2", 0.7],
+    11: ["health potion", "Not sure what's in here but it sure fixes up wounds", "consumable", "H+20", 0.2],
+    12: ["elvish bow", "The elves are know for their archery and even more for their bows", "weapon", ["d+5", "a+5"], 0.2]
 }
 
 
@@ -59,3 +62,30 @@ def drop_items(possible_drops=[], max_drops=0):
     # adds the str at the end
     dropped_items.append(print_str)
     return dropped_items
+
+
+def get_consumables(char):
+    char_items = char.equipped_items
+    consumables = []
+    for item_id in char_items[-1]:
+        temp_item = items.get(item_id)
+        item_type = temp_item[2]
+        if item_type == 'consumable':
+            consumables.append(temp_item[0])
+    return consumables
+
+
+def use_consumable(char, consumable, check=False):
+    used_item = None
+    for item in items.items():
+        if item[1][0] == consumable:
+            used_item = item
+    if check:
+        stat_change = char.apply_stat_changes(used_item[1][3], check)
+        return f"The {used_item[1][0]} {stat_change}"
+    else:
+        char.apply_stat_changes(used_item[1][3])
+
+        char.equipped_items.remove(used_item[1][0])
+        char.equipped_items[-1].remove(used_item[0])
+        return f"{char.name} used the {used_item[1][0]}"
