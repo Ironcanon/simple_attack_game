@@ -360,7 +360,7 @@ class Character():
                 else:
                     item_str = item_str + i + ", "
 
-        return f"Character's name is {self.name}, they have {self.health} health, {self.attack} attack, {self.mana} mana, {self.ammo} ammo and has {item_str} item(s)"
+        return f"Character's name is {self.name}, they have {self.health} out of {self.max_health} health, {self.attack} attack, {self.mana} out of {self.max_mana} mana, {self.ammo} out of {self.max_ammo} ammo and has {item_str} item(s)"
 
 
 def get_random_enemy():
