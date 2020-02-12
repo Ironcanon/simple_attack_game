@@ -52,7 +52,7 @@ def game():
                     temp_char.ammo = loaded_save[3]
                     temp_char.mana = loaded_save[4]
                     temp_char.attacks = loaded_save[5]
-                    temp_char.equiped_items = loaded_save[6]
+                    temp_char.equipped_items = loaded_save[6]
                     rounds = loaded_save[7]
 
                     player_char = temp_char

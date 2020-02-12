@@ -351,16 +351,14 @@ class Character():
 
     def __str__(self):
         item_str = ""
-        if self.equipped_items:
+        if len(self.equipped_items) == 1:
             item_str = "no"
         else:
             for i in self.equipped_items[:-1]:
-                if i == self.equipped_items[:-1][-1]:
-                    print_str = print_str + i + ". "
-                elif i == self.equipped_items[:-1][-2]:
-                    print_str = print_str + i + " and "
+                if i == self.equipped_items[:-1][-2]:
+                    item_str = item_str + i + " and "
                 else:
-                    print_str = print_str + i + ", "
+                    item_str = item_str + i + ", "
 
         return f"Character's name is {self.name}, they have {self.health} health, {self.attack} attack, {self.mana} mana, {self.ammo} ammo and has {item_str} item(s)"
 
