@@ -179,7 +179,7 @@ def player_turn(enemy, player, player_name):
                             "That choice wasn't valid (a valid response would be 'yes', enter or '?'), please try again.")
             elif choice.lower() == 'item':
                 available_consumables = get_consumables(player)
-                if not available_consumables:
+                if available_consumables:
                     print("The available consumables are: ", end="")
 
                     for i in available_consumables:
@@ -191,7 +191,7 @@ def player_turn(enemy, player, player_name):
                             print(i, end=", ")
                     while repeat:
                         choice = input(
-                            "Choose a consumable or enter 'back' to return to the previous choice: ")
+                            "\nChoose a consumable or enter 'back' to return to the previous choice: ")
                         if choice in available_consumables:
                             consumable = choice
                             while repeat:

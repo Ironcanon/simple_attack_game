@@ -355,6 +355,8 @@ class Character():
             item_str = "no"
         else:
             for i in self.equipped_items[:-1]:
+                if i == self.equipped_items[:-1][-1]:
+                    item_str = item_str + i
                 if i == self.equipped_items[:-1][-2]:
                     item_str = item_str + i + " and "
                 else:
