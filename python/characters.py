@@ -335,10 +335,10 @@ class Character():
         item_drops = list(set(item_drops))
 
         self.name = name
-        self.health, self.max_health = health
+        self.health, self.max_health = health, health
         self.attack = attack
-        self.ammo, self.max_ammo = ammo
-        self.mana, self.max_mana = mana
+        self.ammo, self.max_ammo = ammo, ammo
+        self.mana, self.max_mana = mana, mana
         self.attacks = attacks
         self.item_drops = item_drops
         self.equipped_items = [[]]
