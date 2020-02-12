@@ -3,7 +3,7 @@ from classes import get_assignable_classes, is_class_valid
 from races import is_race_valid, get_playable_races
 from characters import Character, get_player, get_random_enemy
 from attacks import get_attack, attacks, get_available_attacks
-from items import drop_items
+from items import drop_items, get_consumables, use_consumable
 
 
 player_name = ""
@@ -175,7 +175,44 @@ def player_turn(enemy, player, player_name):
                         print(
                             "That choice wasn't valid (a valid response would be 'yes', enter or '?'), please try again.")
             elif choice.lower() == 'item':
-                pass
+                available_consumables = get_consumables(player)
+                if not available_consumables:
+                    print("The available consumables are: ", end="")
+
+                    for i in available_consumables:
+                        if i == available_consumables[-1]:
+                            print(i, end=". ")
+                        elif i == available_consumables[-2]:
+                            print(i, end=" and ")
+                        else:
+                            print(i, end=", ")
+                    while repeat:
+                        choice = input(
+                            "Choose a consumable or enter 'back' to return to the previous choice: ")
+                        if choice in available_consumables:
+                            consumable = choice
+                            while repeat:
+                                choice = input(
+                                    f"Are you sure you want to use {consumable}? Enter 'yes' or enter to use it, '?' to check consumable details or 'back' to return to the previous choice: ")
+                                if not choice or choice.lower()[0] == 'y':
+                                    print(use_consumable(player, consumable))
+                                    repeat = False
+                                    break
+                                elif choice == '?':
+                                    print(use_consumable(
+                                        player, consumable, True))
+                                elif choice.lower() == 'back':
+                                    break
+                                else:
+                                    print(
+                                        "That choice wasn't valid (a valid response would be 'yes', enter or '?'), please try again.")
+                        elif choice.lower() == 'back':
+                            break
+                        else:
+                            print(
+                                "That choice wasn't valid (a valid response would be 'yes', enter or '?'), please try again.")
+                else:
+                    print("There are no consumables available.")
             elif choice.lower() == 'wait':
                 while repeat:
                     choice = input(

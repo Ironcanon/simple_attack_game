@@ -23,7 +23,7 @@ items = {
     8: ["bone", "An old, flaky bone, just what I wanted for christmas", "rubish", "n", 0.9],
     9: ["rotten flesh", "Eww, just very eww", "rubish", "n", 0.9],
     10: ["bandage", "It won't do much but it's better than nothing", "once_off_consumable", "h+2", 0.7],
-    11: ["health potion", "Not sure what's in here but it sure fixes up wounds", "consumable", "n", 0.2],
+    11: ["health potion", "Not sure what's in here but it sure fixes up wounds", "consumable", "H+20", 0.2],
     12: ["elvish bow", "The elves are know for their archery and even more for their bows", "weapon", ["d+5", "a+5"], 0.2]
 }
 
@@ -62,3 +62,30 @@ def drop_items(possible_drops=[], max_drops=0):
     # adds the str at the end
     dropped_items.append(print_str)
     return dropped_items
+
+
+def get_consumables(char):
+    char_items = char.equipped_items
+    consumables = []
+    for item_id in char_items[-1]:
+        temp_item = items.get(item_id)
+        item_type = temp_item[2]
+        if item_type == 'consumable':
+            consumables.append(temp_item[0])
+    return consumables
+
+
+def use_consumable(char, consumable, check=False):
+    used_item = None
+    for item in items.items():
+        if item[1][0] == consumable:
+            used_item = item
+    if check:
+        stat_change = char.apply_stat_changes(used_item[1][3], check)
+        return f"The {used_item[1][0]} {stat_change}"
+    else:
+        char.apply_stat_changes(used_item[1][3])
+
+        char.equipped_items.remove(used_item[1][0])
+        char.equipped_items[-1].remove(used_item[0])
+        return f"{char.name} used the {used_item[1][0]}"
