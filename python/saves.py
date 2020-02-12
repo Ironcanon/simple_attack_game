@@ -36,14 +36,17 @@ def save(player_name, player_char, rounds):
             break
 
     health = player_char.health
+    max_health = player_char.max_health
     attack = player_char.attack
     ammo = player_char.ammo
+    max_ammo = player_char.max_ammo
     mana = player_char.mana
+    max_mana = player_char.max_mana
     attacks = player_char.attacks
     equipped_items = player_char.equipped_items
 
-    save_li = [player_name, health, attack,
-               ammo, mana, attacks, equipped_items, rounds]
+    save_li = [player_name, health, max_health, attack,
+               ammo, max_ammo, mana, max_mana, attacks, equipped_items, rounds]
 
     save_file = shelve.open("save")
     save_file[save_name] = save_li

@@ -48,12 +48,15 @@ def game():
                     temp_char = Character([0, 0])
                     temp_char.name = player_name
                     temp_char.health = loaded_save[1]
-                    temp_char.attack = loaded_save[2]
-                    temp_char.ammo = loaded_save[3]
-                    temp_char.mana = loaded_save[4]
-                    temp_char.attacks = loaded_save[5]
-                    temp_char.equipped_items = loaded_save[6]
-                    rounds = loaded_save[7]
+                    temp_char.max_health = loaded_save[2]
+                    temp_char.attack = loaded_save[3]
+                    temp_char.ammo = loaded_save[4]
+                    temp_char.max_ammo = loaded_save[5]
+                    temp_char.mana = loaded_save[6]
+                    temp_char.max_mana = loaded_save[7]
+                    temp_char.attacks = loaded_save[8]
+                    temp_char.equipped_items = loaded_save[9]
+                    rounds = loaded_save[10]
 
                     player_char = temp_char
                     print("Save loaded!", end='\n\n')
