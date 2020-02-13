@@ -16,7 +16,7 @@ fight_intro = {
 }
 status_effects = {
     # layout = ["name", "description", effect, duration]
-    0: ["stunned", "they will miss this turn", "ds", 1],
+    0: ["stunned", "they will miss this ", "ds", 1],
     1: ["burnt", "they will take 5 damage at the beginning of their turn for the next ", "dH-5", 5],
     2: ["refreshed", "they will be cured of all status effects at the beginning of their next ", "bc", 1],
     3: ["strengthened", "their attack will be increased by 5 for the next ", "bd+5", 5]
@@ -144,13 +144,20 @@ class Character():
                 change_opperator = change[1]
                 change_amount = change[2:]
 
-                if change_type == 'h':
+                if change_type == 'H':
                     if change_opperator == '+':
                         print_str += f"increases health by +{change_amount}"
                     elif change_opperator == '-':
                         print_str += f"decreases health by -{change_amount}"
                     elif change_opperator == '*':
                         print_str += f"increases health by *{change_amount}"
+                if change_type == 'h':
+                    if change_opperator == '+':
+                        print_str += f"increases max health by +{change_amount}"
+                    elif change_opperator == '-':
+                        print_str += f"decreases max health by -{change_amount}"
+                    elif change_opperator == '*':
+                        print_str += f"increases max health by *{change_amount}"
                 elif change_type == 'd':
                     if change_opperator == '+':
                         print_str += f"increases attack by +{change_amount}"
@@ -158,20 +165,34 @@ class Character():
                         print_str += f"decreases attack by -{change_amount}"
                     elif change_opperator == '*':
                         print_str += f"increases attack by *{change_amount}"
-                elif change_type == 'a':
+                elif change_type == 'A':
                     if change_opperator == '+':
                         print_str += f"increases ammo by +{change_amount}"
                     elif change_opperator == '-':
                         print_str += f"decreases ammo by -{change_amount}"
                     elif change_opperator == '*':
                         print_str += f"increases ammo by *{change_amount}"
-                elif change_type == 'm':
+                elif change_type == 'a':
+                    if change_opperator == '+':
+                        print_str += f"increases max ammo by +{change_amount}"
+                    elif change_opperator == '-':
+                        print_str += f"decreases max ammo by -{change_amount}"
+                    elif change_opperator == '*':
+                        print_str += f"increases max ammo by *{change_amount}"
+                elif change_type == 'M':
                     if change_opperator == '+':
                         print_str += f"increases mana by +{change_amount}"
                     elif change_opperator == '-':
                         print_str += f"decreases mana by -{change_amount}"
                     elif change_opperator == '*':
                         print_str += f"increases mana by *{change_amount}"
+                elif change_type == 'm':
+                    if change_opperator == '+':
+                        print_str += f"increases max mana by +{change_amount}"
+                    elif change_opperator == '-':
+                        print_str += f"decreases max mana by -{change_amount}"
+                    elif change_opperator == '*':
+                        print_str += f"increases max mana by *{change_amount}"
 
                 if length - loop_num == 0:
                     print_str += ". "

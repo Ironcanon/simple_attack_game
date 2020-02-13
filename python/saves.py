@@ -29,6 +29,12 @@ def check_save_name(save_name):
         return True
 
 
+def delete_save(save_name):
+    save_file = shelve.open("saves/save")
+    save_file.pop(save_name)
+    save_file.close()
+
+
 def save(player_name, player_char, rounds):
     while True:
         save_name = input("Please enter a name for this save: ")
