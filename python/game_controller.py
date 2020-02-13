@@ -1,4 +1,4 @@
-from saves import check_save_name, get_save_names, load_save, save
+from saves import check_save_name, get_save_names, load_save, save, delete_save
 from classes import get_assignable_classes, is_class_valid
 from races import is_race_valid, get_playable_races
 from characters import Character, get_player, get_random_enemy, get_random_boss
@@ -20,54 +20,71 @@ def game():
     if get_save_names():
         welcome_str += ", load an existing save"
     welcome_str += " or check the help? : "
-
-    while True:
+    repeat = True
+    while repeat:
         choice = input(welcome_str)
         if choice.lower()[0] == 'n':
             player_info = new_game_setup()
             player_name, player_char = player_info[0], player_info[1]
+            repeat = False
             break
         elif get_save_names() and choice.lower()[0] == 'l':
             print("The current saves are: ", end="")
-            for i in get_save_names():
-                if i == get_save_names()[-1]:
-                    print(i, end=". ")
-                elif i == get_save_names()[-2]:
-                    print(i, end=" and ")
-                else:
-                    print(i, end=", ")
+            if not get_save_names():
+                for i in get_save_names():
+                    if i == get_save_names()[-1]:
+                        print(i, end=". ")
+                    elif i == get_save_names()[-2]:
+                        print(i, end=" and ")
+                    else:
+                        print(i, end=", ")
+                while repeat:
+                    save_choice = input(
+                        "\nWhich save would you like to select? (Type 'back' to go back) : ")
+                    if save_choice in get_save_names():
+                        while repeat:
+                            choice = input(
+                                "\nWould you like to load or delete this save? (Type 'back' to go back) : ")
+                            if choice.lower() == 'load':
+                                loaded_save = load_save(save_choice)
 
-            while True:
-                save_choice = input(
-                    "\nWhich save would you like to load? (Type 'back' to go back) : ")
-                if save_choice in get_save_names():
-                    loaded_save = load_save(save_choice)
+                                player_name = loaded_save[0]
 
-                    player_name = loaded_save[0]
+                                temp_char = Character([0, 0])
+                                temp_char.name = player_name
+                                temp_char.health = loaded_save[1]
+                                temp_char.max_health = loaded_save[2]
+                                temp_char.attack = loaded_save[3]
+                                temp_char.ammo = loaded_save[4]
+                                temp_char.max_ammo = loaded_save[5]
+                                temp_char.mana = loaded_save[6]
+                                temp_char.max_mana = loaded_save[7]
+                                temp_char.attacks = loaded_save[8]
+                                temp_char.equipped_items = loaded_save[9]
+                                rounds = loaded_save[10]
 
-                    temp_char = Character([0, 0])
-                    temp_char.name = player_name
-                    temp_char.health = loaded_save[1]
-                    temp_char.max_health = loaded_save[2]
-                    temp_char.attack = loaded_save[3]
-                    temp_char.ammo = loaded_save[4]
-                    temp_char.max_ammo = loaded_save[5]
-                    temp_char.mana = loaded_save[6]
-                    temp_char.max_mana = loaded_save[7]
-                    temp_char.attacks = loaded_save[8]
-                    temp_char.equipped_items = loaded_save[9]
-                    rounds = loaded_save[10]
+                                player_char = temp_char
+                                print(
+                                    f"Save {save_choice} loaded!", end='\n\n')
+                                repeat = False
+                                break
+                            elif choice.lower() == 'delete':
+                                delete_save(save_choice)
+                                print(
+                                    f"Save {save_choice} deleted!", end='\n\n')
+                                break
+                            elif choice.lower() == 'back':
+                                break
+                            else:
+                                print("That response was invalid, please try again")
 
-                    player_char = temp_char
-                    print("Save loaded!", end='\n\n')
-                    break
-                elif save_choice.lower() == 'back':
-                    break
-                else:
-                    print("That response was invalid, please try again")
+                    elif save_choice.lower() == 'back':
+                        break
+                    else:
+                        print("That response was invalid, please try again")
 
-            if save_choice.lower() != 'back':
-                break
+            else:
+                print("There are no longer any saves.", end='')
 
         elif choice.lower()[0] == 'h':
             with open("help.txt", mode="r") as help_file:
@@ -271,11 +288,23 @@ def reg_round(player, player_name, round_number):
             items = drop_items(enemy.item_drops, enemy.max_drops)
             player.equip_items(items)
             round_number += 1
-            choice = input(
-                "Would you like to save the game? (enter 'yes' to save or anything else to continue): ")
-            if choice != '' and choice.lower()[0] == 'y':
-                print(save(player_name, player, round_number))
-            return round_number
+            while True:
+                choice = input(
+                    "Would you like to save, quit, save and quit or continue? (enter 's' to save, 'q' to quit, 'sq' to save and quit or anything else to continue): ")
+                if choice.lower() == 's':
+                    print(save(player_name, player, round_number))
+                    return round_number
+                elif choice.lower() == 'q':
+                    print("Thank you for playing, hope to see you again!")
+                    input()
+                    exit()
+                elif choice.lower() == 'sq':
+                    print(save(player_name, player, round_number))
+                    print("Thank you for playing, hope to see you again!")
+                    input()
+                    exit()
+                else:
+                    return round_number
         else:
             print(enemy_turn(enemy, player))
 
@@ -285,3 +314,4 @@ def reg_round(player, player_name, round_number):
 
 
 print(game())
+input()
