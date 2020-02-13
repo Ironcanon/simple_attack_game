@@ -17,9 +17,9 @@ fight_intro = {
 status_effects = {
     # layout = ["name", "description", effect, duration]
     0: ["stunned", "they will miss this turn", "ds", 1],
-    1: ["burnt", "they will take 5 damage at the beginning of their turn for the next 5 turns", "dh-5", 5],
-    2: ["refreshed", "they will be cured of all status effects at the beginning of their next turn", "bc", 1],
-    3: ["strengthened", "their attack will be increased by 5 for the next 5 rounds", "bd+5", 5]
+    1: ["burnt", "they will take 5 damage at the beginning of their turn for the next ", "dH-5", 5],
+    2: ["refreshed", "they will be cured of all status effects at the beginning of their next ", "bc", 1],
+    3: ["strengthened", "their attack will be increased by 5 for the next ", "bd+5", 5]
 }
 
 
@@ -280,10 +280,10 @@ class Character():
             for i in added_items:
                 if isinstance(i, list):
                     for j in i:
-                        self.equipped_items[-1].append(j)
-                elif items.get(added_items[-1][added_items.index(i)])[2] == "once_off_consumable":
-                    added_items[-1].remove(added_items[-1]
-                                           [added_items.index(i)])
+                        if items.get(j)[2] == "once_off_consumable":
+                            added_items.remove(items.get(j)[0])
+                        else:
+                            self.equipped_items[-1].append(j)
                 else:
                     self.equipped_items.insert(-1, i)
 
@@ -314,7 +314,14 @@ class Character():
         # Itterates over debuffs applying effects and adding them to an output string
         for i in debuffs:
             effect = status_effects.get(i[2])
-            effects_str += f"{self.name} is {effect[0]} so {effect[1]}\n"
+            dur_left = i[1]
+
+            if dur_left > 1:
+                dur_left = f"{dur_left} rounds"
+            else:
+                dur_left = "round"
+
+            effects_str += f"{self.name} is {effect[0]} so {effect[1]}{dur_left}\n"
             if i[0][1:] == 's':
                 self.can_attack = False
             else:

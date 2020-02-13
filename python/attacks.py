@@ -11,8 +11,8 @@ attacks = {
 
 
 def attack_basic(char, target, check=False):
+    attack_dmg = round(char.attack, 1)
     if not check:
-        attack_dmg = round(char.attack, 1)
         target.health -= attack_dmg
         target.health = round(target.health, 1)
         if target.health <= 0:
@@ -24,9 +24,9 @@ def attack_basic(char, target, check=False):
 
 
 def attack_archer_basic(char, target, check=False):
+    attack_dmg = round(char.attack + 5, 1)
     if not check:
         if char.ammo > 0:
-            attack_dmg = round(char.attack + 5, 1)
             target.health -= attack_dmg
             target.health = round(target.health, 1)
             char.ammo -= 1
@@ -41,9 +41,9 @@ def attack_archer_basic(char, target, check=False):
 
 
 def attack_mage_basic(char, target, check=False):
+    attack_dmg = round(char.attack * 1.5, 1)
     if not check:
         if char.mana >= 5:
-            attack_dmg = round(char.attack * 1.5, 1)
             target.health -= attack_dmg
             target.health = round(target.health, 1)
             char.mana -= 5
@@ -60,9 +60,9 @@ def attack_mage_basic(char, target, check=False):
 def attack_dwarf_slam(char, target, check=False):
     effect_id = 0
     effect_chance = 0.5
+    attack_dmg = round(char.attack * 2, 1)
     if not check:
         if char.mana >= 10:
-            attack_dmg = round(char.attack * 2, 1)
             target.health -= attack_dmg
             target.health = round(target.health, 1)
             char.mana -= 10
@@ -83,9 +83,9 @@ def attack_dwarf_slam(char, target, check=False):
 def attack_imp_blaze(char, target, check=False):
     effect_id = 1
     effect_chance = 0.8
+    attack_dmg = round((char.attack * 0.8), 1)
     if not check:
         if char.mana >= 10:
-            attack_dmg = round((char.attack * 0.8), 1)
             target.health -= attack_dmg
             target.health = round(target.health, 1)
             char.mana -= 10
