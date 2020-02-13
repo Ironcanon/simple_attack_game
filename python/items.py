@@ -94,7 +94,7 @@ def use_consumable(char, consumable, check=False):
         stat_change = char.apply_stat_changes(item_stat, check)
         return f"The {used_item[1][0]} {stat_change}"
     else:
-        char.apply_stat_changes(used_item[1][3])
+        char.apply_stat_changes(item_stat)
 
         char.equipped_items.remove(used_item[1][0])
         char.equipped_items[-1].remove(used_item[0])
