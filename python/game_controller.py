@@ -296,12 +296,10 @@ def reg_round(player, player_name, round_number):
                     return round_number
                 elif choice.lower() == 'q':
                     print("Thank you for playing, hope to see you again!")
-                    input()
                     exit()
                 elif choice.lower() == 'sq':
                     print(save(player_name, player, round_number))
                     print("Thank you for playing, hope to see you again!")
-                    input()
                     exit()
                 else:
                     return round_number
@@ -314,4 +312,3 @@ def reg_round(player, player_name, round_number):
 
 
 print(game())
-input()
