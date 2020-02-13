@@ -29,8 +29,8 @@ def game():
             repeat = False
             break
         elif get_save_names() and choice.lower()[0] == 'l':
-            print("The current saves are: ", end="")
-            if not get_save_names():
+            if get_save_names():
+                print("The current saves are: ", end="")
                 for i in get_save_names():
                     if i == get_save_names()[-1]:
                         print(i, end=". ")
@@ -84,7 +84,7 @@ def game():
                         print("That response was invalid, please try again")
 
             else:
-                print("There are no longer any saves.", end='')
+                print("There are no longer any saves.")
 
         elif choice.lower()[0] == 'h':
             with open("help.txt", mode="r") as help_file:

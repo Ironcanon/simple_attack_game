@@ -80,10 +80,18 @@ def get_consumables(char):
 def use_consumable(char, consumable, check=False):
     used_item = None
     for item in items.items():
-        if item[1][0] == consumable:
-            used_item = item
+        if isinstance(item[1], list):
+            if item[1][0] == consumable:
+                used_item = item
+                break
+    item_stat = []
+    if isinstance(used_item[1][3], str):
+        item_stat.append(used_item[1][3])
+    else:
+        item_stat += used_item[1][3]
+
     if check:
-        stat_change = char.apply_stat_changes(used_item[1][3], check)
+        stat_change = char.apply_stat_changes(item_stat, check)
         return f"The {used_item[1][0]} {stat_change}"
     else:
         char.apply_stat_changes(used_item[1][3])
