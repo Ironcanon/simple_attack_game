@@ -116,6 +116,8 @@ def get_attack(attack=""):
         return attack_mage_basic
     elif attack_id == 3:
         return attack_dwarf_slam
+    elif attack_id == 4:
+        return attack_imp_blaze
 
 
 def get_available_attacks(char):

@@ -17,9 +17,9 @@ fight_intro = {
 status_effects = {
     # layout = ["name", "description", effect, duration]
     0: ["stunned", "they will miss this turn", "ds", 1],
-    1: ["burnt", "they will take 5 damage at the beginning of your turn for the next 5 turns", "dh-5", 5],
-    2: ["refreshed", "they will be cured of all status effects at the beginning of your next turn", "bc", 1],
-    3: ["strengthened", "they attack will be increased by 5 for the next 5 rounds", "bd+5", 5]
+    1: ["burnt", "they will take 5 damage at the beginning of their turn for the next 5 turns", "dh-5", 5],
+    2: ["refreshed", "they will be cured of all status effects at the beginning of their next turn", "bc", 1],
+    3: ["strengthened", "their attack will be increased by 5 for the next 5 rounds", "bd+5", 5]
 }
 
 
