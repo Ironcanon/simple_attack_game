@@ -11,7 +11,8 @@ fight_intro = {
     2: ["The ", " has been staring at you for some time, I think it wants a fight."],
     3: ["You caught the ", " unaware, make the most of it."],
     4: ["The ", " caught you by suprise, get ready to fight."],
-    5: ["With a blood curling roar the ", " appears."]
+    5: ["With a blood curling roar the ", " appears."],
+    6: ["The ", " called your mom fat, mess it up."]
 }
 status_effects = {
     # layout = ["name", "description", effect, duration]
@@ -61,6 +62,9 @@ class Character():
                         elif change_opperator == '*':
                             self.health *= float(change_amount)
 
+                        if self.health > self.max_health:
+                            self.health = self.max_health
+
                     elif change_type == 'd':
                         if change_opperator == '+':
                             self.attack += float(change_amount)
@@ -84,6 +88,9 @@ class Character():
                         elif change_opperator == '*':
                             self.ammo *= float(change_amount)
 
+                        if self.ammo > self.max_ammo:
+                            self.ammo = self.max_ammo
+
                     elif change_type.upper() == 'M':
                         if change_type == 'm':
                             if change_opperator == '+':
@@ -98,6 +105,9 @@ class Character():
                             self.mana -= float(change_amount)
                         elif change_opperator == '*':
                             self.mana *= float(change_amount)
+
+                        if self.mana > self.max_mana:
+                            self.mana = self.max_mana
         else:
             length = len(changes)
             loop_num = 1
@@ -354,13 +364,16 @@ class Character():
         if len(self.equipped_items) == 1:
             item_str = "no"
         else:
-            for i in self.equipped_items[:-1]:
-                if i == self.equipped_items[:-1][-1]:
-                    item_str = item_str + i
-                if i == self.equipped_items[:-1][-2]:
-                    item_str = item_str + i + " and "
-                else:
-                    item_str = item_str + i + ", "
+            if len(self.equipped_items[:-1]) == 1:
+                item_str = self.equipped_items[:-1]
+            else:
+                for i in self.equipped_items[:-1]:
+                    if i == self.equipped_items[:-1][-1]:
+                        item_str = item_str + i
+                    if i == self.equipped_items[:-1][-2]:
+                        item_str = item_str + i + " and "
+                    else:
+                        item_str = item_str + i + ", "
 
         return f"Character's name is {self.name}, they have {self.health} out of {self.max_health} health, {self.attack} attack, {self.mana} out of {self.max_mana} mana, {self.ammo} out of {self.max_ammo} ammo and has {item_str} item(s)"
 
@@ -377,6 +390,15 @@ def get_random_enemy():
 
     temp_enemy = Character(enemy_atributes)
     return temp_enemy
+
+
+def get_random_boss():
+    temp_boss = get_random_enemy()
+    boss_class = classes.get(100)
+    temp_boss.name += " " + boss_class[0]
+    temp_boss.apply_stat_changes(boss_class[3])
+    temp_boss.max_drops = 5
+    return temp_boss
 
 
 def get_player(race="", classe=""):
