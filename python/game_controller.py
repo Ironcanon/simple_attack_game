@@ -1,7 +1,7 @@
 from saves import check_save_name, get_save_names, load_save, save
 from classes import get_assignable_classes, is_class_valid
 from races import is_race_valid, get_playable_races
-from characters import Character, get_player, get_random_enemy
+from characters import Character, get_player, get_random_enemy, get_random_boss
 from attacks import get_attack, attacks, get_available_attacks
 from items import drop_items, get_consumables, use_consumable
 
@@ -254,8 +254,13 @@ def enemy_turn(enemy, player):
 
 
 def reg_round(player, player_name, round_number):
-    enemy = get_random_enemy()
-    print("An enemy has appeared!")
+    if (round_number + 1) % 5 == 0:
+        enemy = get_random_boss()
+        print("A boss has appeared!")
+    else:
+        enemy = get_random_enemy()
+        print("An enemy has appeared!")
+
     print(enemy.get_random_greeting(), end="\n\n")
 
     while True:
