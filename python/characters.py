@@ -365,7 +365,7 @@ class Character():
             item_str = "no"
         else:
             if len(self.equipped_items[:-1]) == 1:
-                item_str = self.equipped_items[:-1]
+                item_str = self.equipped_items[:-1][0]
             else:
                 for i in self.equipped_items[:-1]:
                     if i == self.equipped_items[:-1][-1]:
