@@ -6,7 +6,7 @@ items = {
     # key -2 stores the item types that can have multiple equipped/ stored
     "regular_item_types": {
         # layout = "name" : max_ammount
-        "ring": 5,
+        "jewellery": 5,
         "consumable": 4,
         "rubish": 99
     },
@@ -19,12 +19,14 @@ items = {
     4: ["holy boots", "Because they have lots of holes, get it.", "boots", "h+2", 0.5],
     5: ["chipped sword", "This sword has seen many battles but was never used for long, I wonder why.", "weapon", "d+3", 0.4],
     6: ["worn shield", "Might actually be better off without it.", "offhand", "h+4", 0.3],
-    7: ["blue ring", "Seems like an ordinary ring not going to lie", "ring", "m+5", 0.5],
+    7: ["blue ring", "Seems like an ordinary ring not going to lie", "jewellery", "m+5", 0.5],
     8: ["bone", "An old, flaky bone, just what I wanted for christmas", "rubish", "n", 0.9],
     9: ["rotten flesh", "Eww, just very eww", "rubish", "n", 0.9],
     10: ["bandage", "It won't do much but it's better than nothing", "once_off_consumable", "h+2", 0.7],
     11: ["health potion", "Not sure what's in here but it sure fixes up wounds", "consumable", "H+20", 0.2],
-    12: ["elvish bow", "The elves are know for their archery and even more for their bows", "weapon", ["d+5", "a+5"], 0.2]
+    12: ["elvish bow", "The elves are know for their archery and even more for their bows", "weapon", ["d+5", "a+5"], 0.2],
+    13: ["imp charm", "A carved imp horn tied around your neck, it seems to give off an aura of energy", "jewellery", ["h+5", "m*1.5"], 0.3],
+    14: ["wing", "An imp's wing, kinda leathery", "rubish", "n", 0.8]
 }
 
 

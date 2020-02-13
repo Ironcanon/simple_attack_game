@@ -375,7 +375,7 @@ def get_random_enemy():
     num_possible_classes = len(possible_classes)
     enemy_atributes.append(random.randint(0, num_possible_classes-1))
 
-    temp_enemy = Character([3, 3])
+    temp_enemy = Character(enemy_atributes)
     return temp_enemy
 
 

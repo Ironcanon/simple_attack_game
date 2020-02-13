@@ -1,10 +1,11 @@
 enemy_races = {
     # layout = ["name" , health, attack, ammo, mana, [extra_attacks], [item_drops], max_drops]
     # cause I'm lazy 0: ["",0,0.0,0,0,[],[],0]
-    0: ["Skeleton", 20, 5.0, 0, 0, [], [8], 3],
+    0: ["Skeleton", 25, 5.0, 0, 0, [], [8], 3],
     1: ["Zombie", 35, 4.5, 0, 0, [], [9], 3],
     2: ["Dark elf", 30, 6.0, 0, 15, [2], [0, 12], 4],
-    3: ["Orge", 40, 4.0, 0, 0, [], [11], 0]
+    3: ["Orge", 40, 4.0, 0, 0, [], [11], 3],
+    4: ["Imp", 25, 4.5, 0, 10, [2, 4], [13, 14], 2]
 }
 
 player_races = {
