@@ -54,7 +54,8 @@ def attack_mage_basic(char, target, check=False):
 
 
 def attack_dwarf_slam(char, target, check=False):
-    stunned_chance = 0.5
+    # stunned_chance = 0.5
+    stunned_chance = 1.0
     if not check:
         if char.mana >= 10:
             target.health -= (char.attack * 2)

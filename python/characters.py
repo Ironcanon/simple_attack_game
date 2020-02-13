@@ -24,20 +24,46 @@ status_effects = {
 
 
 class Character():
-    name = ""
-    max_health = 0
-    health = 0
-    attack = 0
-    max_ammo = 0
-    ammo = 0
-    max_mana = 0
-    mana = 0
-    max_drops = 0
-    attacks = []
-    item_drops = []
-    equipped_items = []
-    effects = []
-    can_attack = True
+    def __init__(self, atributes=[]):
+
+        item_drops = []
+        max_drops = []
+
+        temp_race = get_all_races().get(atributes[0], 0)
+
+        name = temp_race[0]
+        health = temp_race[1]
+        attack = temp_race[2]
+        ammo = temp_race[3]
+        mana = temp_race[4]
+        attacks = temp_race[5]
+
+        if len(temp_race) > 6:
+            item_drops = temp_race[6]
+            max_drops = temp_race[7]
+
+        temp_class = classes.get(atributes[1], 0)
+
+        name = name + " " + temp_class[0]
+        attacks += temp_class[1]
+        attacks = list(set(attacks))
+
+        item_drops += temp_class[2]
+        item_drops = list(set(item_drops))
+
+        self.name = name
+        self.health, self.max_health = health, health
+        self.attack = attack
+        self.ammo, self.max_ammo = ammo, ammo
+        self.mana, self.max_mana = mana, mana
+        self.attacks = attacks
+        self.item_drops = item_drops
+        self.equipped_items = [[]]
+        self.max_drops = max_drops
+        self.effects = []
+        self.can_attack = True
+
+        self.apply_stat_changes(temp_class[3])
 
     def apply_stat_changes(self, changes=[], check=False):
         if not check:
@@ -320,45 +346,6 @@ class Character():
         greeting = rand_greet[0] + self.name + rand_greet[1]
         return greeting
 
-    def __init__(self, atributes=[]):
-
-        item_drops = []
-        max_drops = []
-
-        temp_race = get_all_races().get(atributes[0], 0)
-
-        name = temp_race[0]
-        health = temp_race[1]
-        attack = temp_race[2]
-        ammo = temp_race[3]
-        mana = temp_race[4]
-        attacks = temp_race[5]
-
-        if len(temp_race) > 6:
-            item_drops = temp_race[6]
-            max_drops = temp_race[7]
-
-        temp_class = classes.get(atributes[1], 0)
-
-        name = name + " " + temp_class[0]
-        attacks += temp_class[1]
-        attacks = list(set(attacks))
-
-        item_drops += temp_class[2]
-        item_drops = list(set(item_drops))
-
-        self.name = name
-        self.health, self.max_health = health, health
-        self.attack = attack
-        self.ammo, self.max_ammo = ammo, ammo
-        self.mana, self.max_mana = mana, mana
-        self.attacks = attacks
-        self.item_drops = item_drops
-        self.equipped_items = [[]]
-        self.max_drops = max_drops
-
-        self.apply_stat_changes(temp_class[3])
-
     def __str__(self):
         item_str = ""
         if len(self.equipped_items) == 1:
@@ -388,7 +375,7 @@ def get_random_enemy():
     num_possible_classes = len(possible_classes)
     enemy_atributes.append(random.randint(0, num_possible_classes-1))
 
-    temp_enemy = Character(enemy_atributes)
+    temp_enemy = Character([3, 3])
     return temp_enemy
 
 
