@@ -23,7 +23,7 @@ items = {
     8: ["bone", "An old, flaky bone, just what I wanted for christmas", "rubish", "n", 0.9],
     9: ["rotten flesh", "Eww, just very eww", "rubish", "n", 0.9],
     10: ["bandage", "It won't do much but it's better than nothing", "once_off_consumable", "h+2", 0.7],
-    11: ["health potion", "Not sure what's in here but it sure fixes up wounds", "consumable", "H+20", 0.2],
+    11: ["health potion", "Not sure what's in here but it sure fixes up wounds", "consumable", "H+20", 0.4],
     12: ["elvish bow", "The elves are know for their archery and even more for their bows", "weapon", ["d+5", "a+5"], 0.2],
     13: ["imp charm", "A carved imp horn tied around your neck, it seems to give off an aura of energy", "jewellery", ["h+5", "m*1.5"], 0.3],
     14: ["wing", "An imp's wing, kinda leathery", "rubish", "n", 0.8]

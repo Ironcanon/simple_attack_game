@@ -273,7 +273,10 @@ class Character():
             for i in added_items[-1]:
                 # Gets the stat changes from the newly added items
                 temp_item = items.get(i)
-                item_changes.append(temp_item[3])
+                if isinstance(temp_item[3], str):
+                    item_changes.append(temp_item[3])
+                else:
+                    item_changes += temp_item[3]
 
             self.apply_stat_changes(item_changes)
 
