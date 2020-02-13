@@ -2,14 +2,14 @@ import shelve
 
 
 def load_save(save_name=""):
-    save_file = shelve.open("saves/save")
+    save_file = shelve.open("python/saves/save")
     save_load = save_file[save_name]
     save_file.close()
     return save_load
 
 
 def get_save_names():
-    save_file = shelve.open("saves/save")
+    save_file = shelve.open("python/saves/save")
     save_names = list(save_file.keys())
     save_file.close()
     return save_names
@@ -54,7 +54,7 @@ def save(player_name, player_char, rounds):
     save_li = [player_name, health, max_health, attack,
                ammo, max_ammo, mana, max_mana, attacks, equipped_items, rounds]
 
-    save_file = shelve.open("saves/save")
+    save_file = shelve.open("python/saves/save")
     save_file[save_name] = save_li
     save_file.close()
     return "Game saved!\n"
