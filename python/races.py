@@ -1,19 +1,19 @@
 enemy_races = {
-    # layout = ["name" , health, attack, ammo, mana, [extra_attacks], [item_drops], max_drops]
+    # layout = ["name" , health, attack, ammo, mana, [extra_attacks], speed, [item_drops], max_drops]
     # cause I'm lazy 0: ["",0,0.0,0,0,[],[],0]
-    0: ["Skeleton", 30, 4.5, 0, 0,  [],     [8],      4],
-    1: ["Zombie",   35, 4.0, 0, 0,  [],     [9, 10],  4],
-    2: ["Dark elf", 25, 5.5, 0, 15, [2],    [0, 12],  5],
-    3: ["Orge",     40, 3.5, 0, 0,  [],     [10, 11], 4],
-    4: ["Imp",      25, 4.0, 0, 10, [2, 4], [13, 14], 3]
+    0: ["Skeleton", 30, 4.5, 0, 0,  [],     30, [8],      4],
+    1: ["Zombie",   35, 4.0, 0, 0,  [],     25, [9, 10],  4],
+    2: ["Dark elf", 25, 5.5, 0, 15, [2],    40, [0, 12],  5],
+    3: ["Orge",     40, 3.5, 0, 0,  [],     20, [10, 11], 4],
+    4: ["Imp",      25, 4.0, 0, 10, [2, 4], 35, [13, 14], 3]
 }
 
 player_races = {
-    # layout = ["name" , health, attack, ammo, mana, [extra_attacks]]
-    100: ["Human", 60, 10.0, 0, 0,  []],
-    101: ["Elf",   50, 9.0,  0, 15, [2]],
-    102: ["Dwarf", 45, 10.0, 0, 15, [3]],
-    103: ["Gnome", 40, 10.0, 5, 0,  [1]]
+    # layout = ["name" , health, attack, ammo, mana, [extra_attacks], speed]
+    100: ["Human", 60, 10.0, 0, 0,  [], 35],
+    101: ["Elf",   50, 9.0,  0, 15, [2], 40],
+    102: ["Dwarf", 45, 10.0, 0, 15, [3], 30],
+    103: ["Gnome", 40, 10.0, 5, 0,  [1], 35]
 }
 
 

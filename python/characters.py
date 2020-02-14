@@ -37,10 +37,13 @@ class Character():
         ammo = temp_race[3]
         mana = temp_race[4]
         attacks = temp_race[5]
-
-        if len(temp_race) > 6:
-            item_drops = temp_race[6]
-            max_drops = temp_race[7]
+        speed = temp_race[6]
+        try:
+            item_drops = temp_race[7]
+            max_drops = temp_race[8]
+        except IndexError:
+            pass
+            # Character is a player
 
         temp_class = classes.get(atributes[1], 0)
 
@@ -57,6 +60,7 @@ class Character():
         self.ammo, self.max_ammo = ammo, ammo
         self.mana, self.max_mana = mana, mana
         self.attacks = attacks
+        self.speed = speed
         self.item_drops = item_drops
         self.equipped_items = [[]]
         self.max_drops = max_drops
