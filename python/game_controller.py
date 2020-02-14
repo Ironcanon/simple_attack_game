@@ -4,7 +4,7 @@ from races import is_race_valid, get_playable_races
 from characters import Character, get_player, get_random_enemy, get_random_boss
 from attacks import get_attack, attacks, get_available_attacks
 from items import drop_items, get_consumables, use_consumable
-
+from party import Party
 
 player_name = ""
 player_char = None
@@ -64,6 +64,8 @@ def game():
                                 rounds = loaded_save[10]
 
                                 player_char = temp_char
+
+                                player_party = "SomeParty"
                                 print(
                                     f"Save {save_choice} loaded!", end='\n\n')
                                 repeat = False
@@ -94,7 +96,7 @@ def game():
             print("That response was invalid, please try again (valid responses are 'new game', 'load game' or 'help')")
 
     while player_char.health > 0:
-        rounds = reg_round(player_char, player_name, rounds)
+        rounds = reg_round(player_party, player_name, rounds)
     else:
         return f"\n\tGAME OVER\n\tYou managed to pass {rounds} round(s)\n\tThanks for playing!\n\tCreated by Alexander Pezarro\n"
 
@@ -149,78 +151,61 @@ def new_game_setup():
     return [char_name, player_char]
 
 
-def player_turn(enemy, player, player_name):
-    print(f"It is {player_name}'s turn")
-    print(player.apply_status_effects(), end="")
+def player_turn(enemy_party, player_party, player_name):
+    print(f"It is {player_name}'s party's turn")
+    for player in player_party:
+        print(player.apply_status_effects(), end="")
 
-    if player.can_attack:
-        repeat = True
-        while repeat:
-            choice = input(
-                "\nDo you want to attack, use an item, wait or enter '?' to check player stats?: ")
-            if choice.lower() == 'attack':
-                print("The available attacks are: ", end="")
+        if player.can_attack:
+            repeat = True
+            while repeat:
+                choice = input(
+                    "\nDo you want to attack, use an item, wait or enter '?' to check player stats?: ")
+                if choice.lower() == 'attack':
+                    print("The available attacks are: ", end="")
 
-                available_attacks = get_available_attacks(player)
-                for i in available_attacks:
-                    if i == available_attacks[-1]:
-                        print(i, end=". ")
-                    elif i == available_attacks[-2]:
-                        print(i, end=" and ")
-                    else:
-                        print(i, end=", ")
-                while repeat:
-                    choice = input(
-                        "\nChoose an attack or enter 'back' to return to the previous choice: ")
-                    if choice in available_attacks:
-                        attack = get_attack(choice)
-                        attack_name = choice
-                        while repeat:
-                            choice = input(
-                                f"Are you sure you want to use {attack_name}? Enter 'yes' or enter to attack, '?' to check attack details or 'back' to return to the previous choice: ")
-                            if not choice or choice.lower()[0] == 'y':
-                                print(attack(player, enemy))
-                                repeat = False
-                                break
-                            elif choice == '?':
-                                print(attack(player, enemy, True)[0])
-                            elif choice.lower() == 'back':
-                                break
-                            else:
-                                print(
-                                    "That choice wasn't valid (a valid response would be 'yes', enter or '?'), please try again.")
-                    elif choice.lower() == 'back':
-                        break
-                    else:
-                        print(
-                            "That choice wasn't valid (a valid response would be 'yes', enter or '?'), please try again.")
-            elif choice.lower() == 'item':
-                available_consumables = get_consumables(player)
-                if available_consumables:
-                    print("The available consumables are: ", end="")
-
-                    for i in available_consumables:
-                        if i == available_consumables[-1]:
+                    available_attacks = get_available_attacks(player)
+                    for i in available_attacks:
+                        if i == available_attacks[-1]:
                             print(i, end=". ")
-                        elif i == available_consumables[-2]:
+                        elif i == available_attacks[-2]:
                             print(i, end=" and ")
                         else:
                             print(i, end=", ")
                     while repeat:
                         choice = input(
-                            "\nChoose a consumable or enter 'back' to return to the previous choice: ")
-                        if choice in available_consumables:
-                            consumable = choice
+                            "\nChoose an attack or enter 'back' to return to the previous choice: ")
+                        if choice in available_attacks:
+                            attack = get_attack(choice)
+                            attack_name = choice
                             while repeat:
                                 choice = input(
-                                    f"Are you sure you want to use {consumable}? Enter 'yes' or enter to use it, '?' to check consumable details or 'back' to return to the previous choice: ")
+                                    f"Are you sure you want to use {attack_name}? Enter 'yes' or enter to attack, '?' to check attack details or 'back' to return to the previous choice: ")
                                 if not choice or choice.lower()[0] == 'y':
-                                    print(use_consumable(player, consumable))
-                                    repeat = False
-                                    break
+                                    # TODO get enemies from enemy_party and ask player to select one
+                                    for enemy in enemy_party.party:
+                                        if enemy == enemy_party.party[-1]:
+                                            print(enemy.name, end=". ")
+                                        elif enemy == enemy_party.party[-2]:
+                                            print(enemy.name, end=" and ")
+                                        else:
+                                            print(enemy.name, end=", ")
+                                        while repeat:
+                                            choice = input(
+                                                "\nChoose an enemy or enter 'back' to return to the previous choice: ")
+                                            if choice in enemy_party.get_party_members_names():
+                                                chosen_enemy = enemy_party.party[enemy_party.get_party_members_names().index(
+                                                    choice)]
+                                                print(attack(player, enemy))
+                                                repeat = False
+                                                break
+                                            elif choice.lower() == 'back':
+                                                pass
+                                            else:
+                                                pass
+
                                 elif choice == '?':
-                                    print(use_consumable(
-                                        player, consumable, True))
+                                    print(attack(player, enemy, True)[0])
                                 elif choice.lower() == 'back':
                                     break
                                 else:
@@ -231,28 +216,66 @@ def player_turn(enemy, player, player_name):
                         else:
                             print(
                                 "That choice wasn't valid (a valid response would be 'yes', enter or '?'), please try again.")
-                else:
-                    print("There are no consumables available.")
-            elif choice.lower() == 'wait':
-                while repeat:
-                    choice = input(
-                        "Are you sure you want to skip your turn? Enter 'yes' or enter to wait or 'back' to return to the previous choice: ")
-                    if not choice or choice.lower()[0] == 'y':
-                        print(f"{player.name} chose to skip their turn")
-                        repeat = False
-                        break
-                    elif choice.lower() == 'back':
-                        break
-                    else:
-                        print(
-                            "That choice wasn't valid (a valid response would be attack, item, wait or ?). Please try again.")
-            elif choice.lower() == '?':
-                print(player)
-            else:
-                print(
-                    "That choice wasn't valid (a valid response would be attack, item, wait or ?). Please try again.")
+                elif choice.lower() == 'item':
+                    available_consumables = get_consumables(player)
+                    if available_consumables:
+                        print("The available consumables are: ", end="")
 
-    return f"{player_name}'s turn is finished\n"
+                        for i in available_consumables:
+                            if i == available_consumables[-1]:
+                                print(i, end=". ")
+                            elif i == available_consumables[-2]:
+                                print(i, end=" and ")
+                            else:
+                                print(i, end=", ")
+                        while repeat:
+                            choice = input(
+                                "\nChoose a consumable or enter 'back' to return to the previous choice: ")
+                            if choice in available_consumables:
+                                consumable = choice
+                                while repeat:
+                                    choice = input(
+                                        f"Are you sure you want to use {consumable}? Enter 'yes' or enter to use it, '?' to check consumable details or 'back' to return to the previous choice: ")
+                                    if not choice or choice.lower()[0] == 'y':
+                                        print(use_consumable(
+                                            player, consumable))
+                                        repeat = False
+                                        break
+                                    elif choice == '?':
+                                        print(use_consumable(
+                                            player, consumable, True))
+                                    elif choice.lower() == 'back':
+                                        break
+                                    else:
+                                        print(
+                                            "That choice wasn't valid (a valid response would be 'yes', enter or '?'), please try again.")
+                            elif choice.lower() == 'back':
+                                break
+                            else:
+                                print(
+                                    "That choice wasn't valid (a valid response would be 'yes', enter or '?'), please try again.")
+                    else:
+                        print("There are no consumables available.")
+                elif choice.lower() == 'wait':
+                    while repeat:
+                        choice = input(
+                            "Are you sure you want to skip your turn? Enter 'yes' or enter to wait or 'back' to return to the previous choice: ")
+                        if not choice or choice.lower()[0] == 'y':
+                            print(f"{player.name} chose to skip their turn")
+                            repeat = False
+                            break
+                        elif choice.lower() == 'back':
+                            break
+                        else:
+                            print(
+                                "That choice wasn't valid (a valid response would be attack, item, wait or ?). Please try again.")
+                elif choice.lower() == '?':
+                    print(player)
+                else:
+                    print(
+                        "That choice wasn't valid (a valid response would be attack, item, wait or ?). Please try again.")
+
+    return f"{player_name}'s party's turn is finished\n"
 
 
 def enemy_turn(enemy, player):
@@ -270,22 +293,24 @@ def enemy_turn(enemy, player):
     return "Enemy's turn is finished\n"
 
 
-def reg_round(player, player_name, round_number):
+def reg_round(player_party, player_name, round_number):
     if (round_number + 1) % 5 == 0:
-        enemy = get_random_boss()
+        enemy_party = get_random_boss()
         print("A boss has appeared!")
     else:
-        enemy = get_random_enemy()
+        enemy_party = get_random_enemy()
         print("An enemy has appeared!")
 
     print(enemy.get_random_greeting(), end="\n\n")
 
     while True:
-        print(player_turn(enemy, player, player_name))
+        print(player_turn(enemy_party, player_party, player_name))
         if enemy.health == 0:
             print(
                 f"Congradulations {player_name} you defeated the {enemy.name}!\n")
+            # Change this so it works off of enemies dying rather than round end
             items = drop_items(enemy.item_drops, enemy.max_drops)
+            # Figure how to fix this fuck show
             player.equip_items(items)
             round_number += 1
             while True:
