@@ -408,7 +408,10 @@ class Party():
         self.party = []
         self.items = [[]]
         for char in characters:
-            self.party.append(char)
+            if isinstance(char, list):
+                self.party.extend(char)
+            else:
+                self.party.append(char)
 
     def get_party_members_names(self):
         names = []
@@ -478,7 +481,6 @@ def get_random_enemy():
 
 
 def get_enemy_party(round_num, is_boss_round=False):
-    enemy_party = None
     if is_boss_round:
         boss = get_random_boss()
         enemy_party = Party(boss)

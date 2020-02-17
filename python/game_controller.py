@@ -80,7 +80,7 @@ def game():
         else:
             print("That response was invalid, please try again (valid responses are 'new game', 'load game' or 'help')")
 
-    while player_party.get_party_health > 0:
+    while player_party.get_party_health() > 0:
         rounds = reg_round(player_party, player_name, rounds)
     else:
         return f"\n\tGAME OVER\n\tYou managed to pass {rounds} round(s)\n\tThanks for playing!\n\tCreated by Alexander Pezarro\n"
@@ -141,7 +141,8 @@ def new_game_setup():
 
 def player_turn(enemy_party, player_party, player_name):
     print(f"It is {player_name}'s party's turn")
-    for player in player_party:
+    for player in player_party.party:
+        print(f"It's {player.name}'s chance")
         print(player.apply_status_effects(), end="")
         if player.can_attack:
             repeat = True
@@ -267,8 +268,9 @@ def player_turn(enemy_party, player_party, player_name):
 
 
 def enemy_turn(enemy_party, player_party):
-    print("It is the enemy's turn")
-    for enemy in enemy_party:
+    print("It is the enemy party's turn")
+    for enemy in enemy_party.party:
+        print(f"It's the {enemy.name}'s chance")
         print(enemy.apply_status_effects(), end="")
         if enemy.can_attack:
             enemy.attacks.sort(reverse=True)
@@ -284,7 +286,7 @@ def enemy_turn(enemy_party, player_party):
                 if enemy.mana >= check_str[1] and enemy.ammo >= check_str[2]:
                     print(attack(enemy, current_target))
                     break
-    return "Enemy's turn is finished\n"
+    return "Enemy party's turn is finished\n"
 
 
 def reg_round(player_party, player_name, round_number):
@@ -296,9 +298,9 @@ def reg_round(player_party, player_name, round_number):
         print("An enemy party has appeared!")
     enemy_party = get_enemy_party(round_number, boss_round)
 
-    print(enemy_party.get_random_greeting, end="\n\n")
+    print(enemy_party.get_random_greeting(), end="\n\n")
 
-    while enemy_party.get_party_health != 0:
+    while enemy_party.get_party_health() > 0:
         print(player_turn(enemy_party, player_party, player_name))
         if enemy_party.get_dead_party_members():
             for enemy in enemy_party.get_dead_party_members():
@@ -309,7 +311,7 @@ def reg_round(player_party, player_name, round_number):
         else:
             print(enemy_turn(enemy_party, player_party))
 
-        if player_party.get_party_health() == 0:
+        if not player_party.get_party_health() > 0:
             print(f"{player_name}'s party was defeated by the enemy party\n")
             return round_number
 
