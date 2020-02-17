@@ -187,7 +187,11 @@ def player_turn(enemy_party, player_party, player_name):
                                                 chosen_enemy = enemy_party.get_member_from_name(
                                                     choice)
                                                 print(
+                                                    "````````````````````````````")
+                                                print(
                                                     attack(player, chosen_enemy))
+                                                print(
+                                                    "````````````````````````````")
                                                 repeat = False
                                                 break
                                             elif choice.lower() == 'back':
@@ -291,13 +295,16 @@ def enemy_turn(enemy_party, player_party):
                 attack = get_attack(attack_check)
                 check_str = attack(enemy, current_target, True)
                 if enemy.mana >= check_str[1] and enemy.ammo >= check_str[2]:
+                    print("````````````````````````````")
                     print(attack(enemy, current_target))
+                    print("````````````````````````````")
                     break
     return "Enemy party's turn is finished\n"
 
 
 def reg_round(player_party, player_name, round_number):
     boss_round = False
+    print("----------------------------")
     if (round_number + 1) % 5 == 0:
         boss_round = True
         print("A boss has appeared!")
@@ -324,7 +331,7 @@ def reg_round(player_party, player_name, round_number):
 
     print(f"Congradulations {player_name} you defeated the enemy party!")
     round_number += 1
-
+    print("----------------------------")
     while True:
         choice = input(
             "Would you like to save, quit, save and quit or continue? (enter 's' to save, 'q' to quit, 'sq' to save and quit or anything else to continue): ")
