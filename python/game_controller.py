@@ -143,7 +143,6 @@ def player_turn(enemy_party, player_party, player_name):
     print(f"It is {player_name}'s party's turn")
     for player in player_party:
         print(player.apply_status_effects(), end="")
-
         if player.can_attack:
             repeat = True
             while repeat:
@@ -267,18 +266,24 @@ def player_turn(enemy_party, player_party, player_name):
     return f"{player_name}'s party's turn is finished\n"
 
 
-def enemy_turn(enemy, player):
+def enemy_turn(enemy_party, player_party):
     print("It is the enemy's turn")
-    print(enemy.apply_status_effects(), end="")
-    if enemy.can_attack:
-        enemy.attacks.sort(reverse=True)
-        for i in enemy.attacks:
-            attack_check = attacks.get(i)[1]
-            attack = get_attack(attack_check)
-            check_str = attack(enemy, player, True)
-            if enemy.mana >= check_str[1] and enemy.ammo >= check_str[2]:
-                print(attack(enemy, player))
-                break
+    for enemy in enemy_party:
+        print(enemy.apply_status_effects(), end="")
+        if enemy.can_attack:
+            enemy.attacks.sort(reverse=True)
+            current_target = None
+            for player_char in player_party.party:
+                if player_char.health > 0:
+                    current_target = player_char
+                    break
+            for i in enemy.attacks:
+                attack_check = attacks.get(i)[1]
+                attack = get_attack(attack_check)
+                check_str = attack(enemy, current_target, True)
+                if enemy.mana >= check_str[1] and enemy.ammo >= check_str[2]:
+                    print(attack(enemy, current_target))
+                    break
     return "Enemy's turn is finished\n"
 
 
