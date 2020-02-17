@@ -162,7 +162,7 @@ def player_turn(enemy_party, player_party, player_name):
                             print(i, end=", ")
                     while repeat:
                         choice = input(
-                            "\nChoose an attack or enter 'back' to return to the previous choice: ")
+                            "\nChoose an attack or enter 'back' to return to the previous choice: ").lower()
                         if choice in available_attacks:
                             attack = get_attack(choice)
                             attack_name = choice
@@ -170,14 +170,16 @@ def player_turn(enemy_party, player_party, player_name):
                                 choice = input(
                                     f"Are you sure you want to use {attack_name}? Enter 'yes' or enter to attack, '?' to check attack details or 'back' to return to the previous choice: ")
                                 if not choice or choice.lower()[0] == 'y':
-                                    # TODO get enemies from enemy_party and ask player to select one
-                                    for enemy in enemy_party.party:
-                                        if enemy == enemy_party.party[-1]:
-                                            print(enemy.name, end=". ")
-                                        elif enemy == enemy_party.party[-2]:
-                                            print(enemy.name, end=" and ")
-                                        else:
-                                            print(enemy.name, end=", ")
+                                    if len(enemy_party.party) > 1:
+                                        print(
+                                            "The available enemies are: ", end="")
+                                        for enemy in enemy_party.party:
+                                            if enemy == enemy_party.party[-1]:
+                                                print(enemy.name, end=". ")
+                                            elif enemy == enemy_party.party[-2]:
+                                                print(enemy.name, end=" and ")
+                                            else:
+                                                print(enemy.name, end=", ")
                                         while repeat:
                                             choice = input(
                                                 "\nChoose an enemy or enter 'back' to return to the previous choice: ")
@@ -191,20 +193,25 @@ def player_turn(enemy_party, player_party, player_name):
                                             elif choice.lower() == 'back':
                                                 break
                                             else:
-                                                pass
-
+                                                print(
+                                                    "That choice wasn't valid (a valid response would be a valid enemy name or 'back'), please try again.")
+                                    else:
+                                        enemy = enemy_party.party[0]
+                                        print(attack(player, chosen_enemy))
+                                        repeat = False
+                                        break
                                 elif choice == '?':
                                     print(attack(player, enemy, True)[0])
                                 elif choice.lower() == 'back':
                                     break
                                 else:
                                     print(
-                                        "That choice wasn't valid (a valid response would be 'yes', enter or '?'), please try again.")
+                                        "That choice wasn't valid (a valid response would be 'yes', enter,'?' or 'back'), please try again.")
                         elif choice.lower() == 'back':
                             break
                         else:
                             print(
-                                "That choice wasn't valid (a valid response would be 'yes', enter or '?'), please try again.")
+                                "That choice wasn't valid (a valid response would be a valid attack name or 'back'), please try again.")
                 elif choice.lower() == 'item':
                     available_consumables = get_consumables(player)
                     if available_consumables:
@@ -305,7 +312,7 @@ def reg_round(player_party, player_name, round_number):
         if enemy_party.get_dead_party_members():
             for enemy in enemy_party.get_dead_party_members():
                 print(
-                    f"Congradulations {player_name} you defeated the {enemy.name}!\n")
+                    f"The {enemy.name} was defeated!\n")
                 items = drop_items(enemy.item_drops, enemy.max_drops)
                 player_party.add_items(items)
         else:
