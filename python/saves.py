@@ -1,11 +1,34 @@
 import shelve
+from characters import Character, Party
 
 
 def load_save(save_name=""):
     save_file = shelve.open("saves/save")
     save_load = save_file[save_name]
+
+    player_chars = []
+    player_name = save_load[0][0]
+
+    for char_li in save_load[:-1]:
+        temp_char = Character([0, 0])
+
+        temp_char.name = char_li[0]
+        temp_char.health = char_li[1]
+        temp_char.max_health = char_li[2]
+        temp_char.attack = char_li[3]
+        temp_char.ammo = char_li[4]
+        temp_char.max_ammo = char_li[5]
+        temp_char.mana = char_li[6]
+        temp_char.max_mana = char_li[7]
+        temp_char.attacks = char_li[8]
+        temp_char.equipped_items = char_li[9]
+        player_chars.append(temp_char)
+    rounds = save_load[-1]
+
+    player_party = Party(player_chars)
+
     save_file.close()
-    return save_load
+    return [player_name, player_party, rounds]
 
 
 def get_save_names():
@@ -35,24 +58,13 @@ def delete_save(save_name):
     save_file.close()
 
 
-def save(player_name, player_char, rounds):
+def save(player_name, player_party, rounds):
     while True:
         save_name = input("Please enter a name for this save: ")
         if check_save_name(save_name):
             break
 
-    health = player_char.health
-    max_health = player_char.max_health
-    attack = player_char.attack
-    ammo = player_char.ammo
-    max_ammo = player_char.max_ammo
-    mana = player_char.mana
-    max_mana = player_char.max_mana
-    attacks = player_char.attacks
-    equipped_items = player_char.equipped_items
-
-    save_li = [player_name, health, max_health, attack,
-               ammo, max_ammo, mana, max_mana, attacks, equipped_items, rounds]
+    save_li = player_party.output_save().append(rounds)
 
     save_file = shelve.open("saves/save")
     save_file[save_name] = save_li

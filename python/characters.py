@@ -381,6 +381,9 @@ class Character():
         greeting = rand_greet[0] + self.name + rand_greet[1]
         return greeting
 
+    def output_save(self):
+        return self.name, self.health, self.max_health, self.attack, self.ammo, self.max_ammo, self.mana, self.max_mana, self.attacks, self.equipped_items
+
     def __str__(self):
         item_str = ""
         if len(self.equipped_items) == 1:
@@ -400,6 +403,66 @@ class Character():
         return f"Character's name is {self.name}, they have {self.health} out of {self.max_health} health, {self.attack} attack, {self.mana} out of {self.max_mana} mana, {self.ammo} out of {self.max_ammo} ammo and has {item_str} item(s)"
 
 
+class Party():
+    def __init__(self, *characters):
+        self.party = []
+        self.items = [[]]
+        for char in characters:
+            self.party.append(char)
+
+    def get_party_members_names(self):
+        names = []
+        for char in self.party:
+            names.append(char.name)
+        return names
+
+    def get_member_from_name(self, char_name):
+        for char in self.party:
+            if char_name == char.name:
+                return char
+
+    def add_items(self, item_li=[]):
+        self.items.extend(item_li[:-1])
+        self.items[-1].extend(item_li[-1])
+
+    def get_party_health(self):
+        health = 0
+        for char in self.party:
+            health += char.health
+        return health
+
+    def get_random_greeting(self):
+        greetings = ''
+        for char in self.party:
+            if char != self.party[-1]:
+                greetings += char.get_random_greeting() + '\n'
+            else:
+                greetings += char.get_random_greeting()
+        return greetings
+
+    def get_dead_party_members(self):
+        dead_party_members = []
+        for char in self.party:
+            if char.health == 0:
+                dead_party_members.append(char)
+        return dead_party_members
+
+    def add_party_member(self, char):
+        self.party.append(char)
+
+    def output_save(self):
+        save_output = []
+        for char in self.party:
+            save_output.append(char.output_save)
+        return save_output
+
+    def __str__(self):
+        print_str = 'This party contains the folowing charcters:'
+        for char in self.party:
+            print_str += " " + char.name
+        return print_str
+
+
 def get_random_enemy():
     enemy_atributes = []
 
@@ -412,6 +475,21 @@ def get_random_enemy():
 
     temp_enemy = Character(enemy_atributes)
     return temp_enemy
+
+
+def get_enemy_party(round_num, is_boss_round=False):
+    enemy_party = None
+    if is_boss_round:
+        boss = get_random_boss()
+        enemy_party = Party(boss)
+    else:
+        extra_enemies = round_num // 10
+        enemies = []
+        for _ in range(0, 1 + extra_enemies):
+            temp_enemy = get_random_enemy()
+            enemies.append(temp_enemy)
+        enemy_party = Party(enemies)
+    return enemy_party
 
 
 def get_random_boss():

@@ -1,10 +1,9 @@
 from saves import check_save_name, get_save_names, load_save, save, delete_save
 from classes import get_assignable_classes, is_class_valid
 from races import is_race_valid, get_playable_races
-from characters import Character, get_player, get_random_enemy, get_random_boss
+from characters import Character, get_player, get_random_enemy, get_random_boss, Party, get_enemy_party
 from attacks import get_attack, attacks, get_available_attacks
 from items import drop_items, get_consumables, use_consumable
-from party import Party
 
 player_name = ""
 player_char = None
@@ -25,7 +24,7 @@ def game():
         choice = input(welcome_str)
         if choice.lower()[0] == 'n':
             player_info = new_game_setup()
-            player_name, player_char = player_info[0], player_info[1]
+            player_name, player_party = player_info[0], player_info[1]
             repeat = False
             break
         elif get_save_names() and choice.lower()[0] == 'l':
@@ -49,23 +48,9 @@ def game():
                                 loaded_save = load_save(save_choice)
 
                                 player_name = loaded_save[0]
+                                player_party = loaded_save[1]
+                                rounds = loaded_save[2]
 
-                                temp_char = Character([0, 0])
-                                temp_char.name = player_name
-                                temp_char.health = loaded_save[1]
-                                temp_char.max_health = loaded_save[2]
-                                temp_char.attack = loaded_save[3]
-                                temp_char.ammo = loaded_save[4]
-                                temp_char.max_ammo = loaded_save[5]
-                                temp_char.mana = loaded_save[6]
-                                temp_char.max_mana = loaded_save[7]
-                                temp_char.attacks = loaded_save[8]
-                                temp_char.equipped_items = loaded_save[9]
-                                rounds = loaded_save[10]
-
-                                player_char = temp_char
-
-                                player_party = "SomeParty"
                                 print(
                                     f"Save {save_choice} loaded!", end='\n\n')
                                 repeat = False
@@ -95,7 +80,7 @@ def game():
         else:
             print("That response was invalid, please try again (valid responses are 'new game', 'load game' or 'help')")
 
-    while player_char.health > 0:
+    while player_party.get_party_health > 0:
         rounds = reg_round(player_party, player_name, rounds)
     else:
         return f"\n\tGAME OVER\n\tYou managed to pass {rounds} round(s)\n\tThanks for playing!\n\tCreated by Alexander Pezarro\n"
@@ -147,8 +132,11 @@ def new_game_setup():
     player_char = get_player(race_choice, class_choice)
 
     print(f"Well {char_name} the {player_char.name.lower()}, I wish you well on your adventure, bon voyage!\n")
+
     player_char.name = char_name
-    return [char_name, player_char]
+    player_party = Party(player_char)
+
+    return [char_name, player_party]
 
 
 def player_turn(enemy_party, player_party, player_name):
@@ -194,13 +182,14 @@ def player_turn(enemy_party, player_party, player_name):
                                             choice = input(
                                                 "\nChoose an enemy or enter 'back' to return to the previous choice: ")
                                             if choice in enemy_party.get_party_members_names():
-                                                chosen_enemy = enemy_party.party[enemy_party.get_party_members_names().index(
-                                                    choice)]
-                                                print(attack(player, enemy))
+                                                chosen_enemy = enemy_party.get_member_from_name(
+                                                    choice)
+                                                print(
+                                                    attack(player, chosen_enemy))
                                                 repeat = False
                                                 break
                                             elif choice.lower() == 'back':
-                                                pass
+                                                break
                                             else:
                                                 pass
 
@@ -294,45 +283,48 @@ def enemy_turn(enemy, player):
 
 
 def reg_round(player_party, player_name, round_number):
+    boss_round = False
     if (round_number + 1) % 5 == 0:
-        enemy_party = get_random_boss()
+        boss_round = True
         print("A boss has appeared!")
     else:
-        enemy_party = get_random_enemy()
-        print("An enemy has appeared!")
+        print("An enemy party has appeared!")
+    enemy_party = get_enemy_party(round_number, boss_round)
 
-    print(enemy.get_random_greeting(), end="\n\n")
+    print(enemy_party.get_random_greeting, end="\n\n")
+
+    while enemy_party.get_party_health != 0:
+        print(player_turn(enemy_party, player_party, player_name))
+        if enemy_party.get_dead_party_members():
+            for enemy in enemy_party.get_dead_party_members():
+                print(
+                    f"Congradulations {player_name} you defeated the {enemy.name}!\n")
+                items = drop_items(enemy.item_drops, enemy.max_drops)
+                player_party.add_items(items)
+        else:
+            print(enemy_turn(enemy_party, player_party))
+
+        if player_party.get_party_health() == 0:
+            print(f"{player_name}'s party was defeated by the enemy party\n")
+            return round_number
+
+    print(f"Congradulations {player_name} you defeated the enemy party!")
+    round_number += 1
 
     while True:
-        print(player_turn(enemy_party, player_party, player_name))
-        if enemy.health == 0:
-            print(
-                f"Congradulations {player_name} you defeated the {enemy.name}!\n")
-            # Change this so it works off of enemies dying rather than round end
-            items = drop_items(enemy.item_drops, enemy.max_drops)
-            # Figure how to fix this fuck show
-            player.equip_items(items)
-            round_number += 1
-            while True:
-                choice = input(
-                    "Would you like to save, quit, save and quit or continue? (enter 's' to save, 'q' to quit, 'sq' to save and quit or anything else to continue): ")
-                if choice.lower() == 's':
-                    print(save(player_name, player, round_number))
-                    return round_number
-                elif choice.lower() == 'q':
-                    print("Thank you for playing, hope to see you again!")
-                    exit()
-                elif choice.lower() == 'sq':
-                    print(save(player_name, player, round_number))
-                    print("Thank you for playing, hope to see you again!")
-                    exit()
-                else:
-                    return round_number
+        choice = input(
+            "Would you like to save, quit, save and quit or continue? (enter 's' to save, 'q' to quit, 'sq' to save and quit or anything else to continue): ")
+        if choice.lower() == 's':
+            print(save(player_name, player_party, round_number))
+            return round_number
+        elif choice.lower() == 'q':
+            print("Thank you for playing, hope to see you again!")
+            exit()
+        elif choice.lower() == 'sq':
+            print(save(player_name, player_party, round_number))
+            print("Thank you for playing, hope to see you again!")
+            exit()
         else:
-            print(enemy_turn(enemy, player))
-
-        if player.health == 0:
-            print(f"{player_name} was defeated by the {enemy.name}\n")
             return round_number
 
 
