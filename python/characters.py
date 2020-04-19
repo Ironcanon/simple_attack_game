@@ -380,7 +380,7 @@ class Character():
     def __str__(self):
         item_str = ""
         if len(self.equipped_items) == 1:
-            item_str = "no"
+            item_str = "None"
         else:
             if len(self.equipped_items[:-1]) == 1:
                 item_str = self.equipped_items[:-1][0]
@@ -393,7 +393,7 @@ class Character():
                     else:
                         item_str = item_str + i + ", "
 
-        return f"Character's name is {self.name}, they have {self.health} out of {self.max_health} health, {self.attack} attack, {self.mana} out of {self.max_mana} mana, {self.ammo} out of {self.max_ammo} ammo and has {item_str} item(s)"
+        return f"Character's name is {self.name}, they have {self.health} out of {self.max_health} health, {self.attack} attack, {self.mana} out of {self.max_mana} mana, {self.ammo} out of {self.max_ammo} ammo and has the following item(s): {item_str}"
 
 
 def get_random_enemy():
