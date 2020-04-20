@@ -322,6 +322,7 @@ def reg_round(player_party, player_name, round_number):
                     f"The {enemy.name} was defeated!\n")
                 items = drop_items(enemy.item_drops, enemy.max_drops)
                 player_party.add_items(items)
+            enemy_party.get_dead_party_members().clear()
         else:
             print(enemy_turn(enemy_party, player_party))
 
@@ -332,21 +333,23 @@ def reg_round(player_party, player_name, round_number):
     print(f"Congradulations {player_name} you defeated the enemy party!")
     round_number += 1
     print("----------------------------")
-    while True:
-        choice = input(
-            "Would you like to save, quit, save and quit or continue? (enter 's' to save, 'q' to quit, 'sq' to save and quit or anything else to continue): ")
-        if choice.lower() == 's':
-            print(save(player_name, player_party, round_number))
-            return round_number
-        elif choice.lower() == 'q':
-            print("Thank you for playing, hope to see you again!")
-            exit()
-        elif choice.lower() == 'sq':
-            print(save(player_name, player_party, round_number))
-            print("Thank you for playing, hope to see you again!")
-            exit()
-        else:
-            return round_number
+    if boss_round:
+        while True:
+            choice = input(
+                "Would you like to save, quit, save and quit or continue? (enter 's' to save, 'q' to quit, 'sq' to save and quit or anything else to continue): ")
+            if choice.lower() == 's':
+                print(save(player_name, player_party, round_number))
+                return round_number
+            elif choice.lower() == 'q':
+                print("Thank you for playing, hope to see you again!")
+                exit()
+            elif choice.lower() == 'sq':
+                print(save(player_name, player_party, round_number))
+                print("Thank you for playing, hope to see you again!")
+                exit()
+            else:
+                return round_number
+    
 
 
 print(game())

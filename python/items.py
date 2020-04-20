@@ -99,3 +99,78 @@ def use_consumable(char, consumable, check=False):
         char.equipped_items.remove(used_item[1][0])
         char.equipped_items[-1].remove(used_item[0])
         return f"{char.name} used the {used_item[1][0]}"
+
+def check_item_stats(item_id, just_stats=False):
+    item = items[item_id]
+    if just_stats:
+        print_str = ""
+    else:
+        print_str = f"Item's name is {item[0]}, {item[1]}, its item type is {item[2]} and it "
+
+    changes = item[3] 
+    length = len(changes)
+    loop_num = 1
+    
+    for change in changes:
+
+        change_type = change[0]
+        change_opperator = change[1]
+        change_amount = change[2:]
+
+        if change_type == 'H':
+            if change_opperator == '+':
+                print_str += f"increases health by +{change_amount}"
+            elif change_opperator == '-':
+                print_str += f"decreases health by -{change_amount}"
+            elif change_opperator == '*':
+                print_str += f"increases health by *{change_amount}"
+        if change_type == 'h':
+            if change_opperator == '+':
+                print_str += f"increases max health by +{change_amount}"
+            elif change_opperator == '-':
+                print_str += f"decreases max health by -{change_amount}"
+            elif change_opperator == '*':
+                print_str += f"increases max health by *{change_amount}"
+        elif change_type == 'd':
+            if change_opperator == '+':
+                print_str += f"increases attack by +{change_amount}"
+            elif change_opperator == '-':
+                print_str += f"decreases attack by -{change_amount}"
+            elif change_opperator == '*':
+                print_str += f"increases attack by *{change_amount}"
+        elif change_type == 'A':
+            if change_opperator == '+':
+                print_str += f"increases ammo by +{change_amount}"
+            elif change_opperator == '-':
+                print_str += f"decreases ammo by -{change_amount}"
+            elif change_opperator == '*':
+                print_str += f"increases ammo by *{change_amount}"
+        elif change_type == 'a':
+            if change_opperator == '+':
+                print_str += f"increases max ammo by +{change_amount}"
+            elif change_opperator == '-':
+                print_str += f"decreases max ammo by -{change_amount}"
+            elif change_opperator == '*':
+                print_str += f"increases max ammo by *{change_amount}"
+        elif change_type == 'M':
+            if change_opperator == '+':
+                print_str += f"increases mana by +{change_amount}"
+            elif change_opperator == '-':
+                print_str += f"decreases mana by -{change_amount}"
+            elif change_opperator == '*':
+                print_str += f"increases mana by *{change_amount}"
+        elif change_type == 'm':
+            if change_opperator == '+':
+                print_str += f"increases max mana by +{change_amount}"
+            elif change_opperator == '-':
+                print_str += f"decreases max mana by -{change_amount}"
+            elif change_opperator == '*':
+                print_str += f"increases max mana by *{change_amount}"
+
+        if length - loop_num == 0:
+            print_str += ". "
+        elif length - loop_num == 1:
+            print_str += " and "
+        else:
+            print_str += ", "
+    return print_str
