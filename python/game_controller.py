@@ -200,12 +200,12 @@ def player_turn(enemy_party, player_party, player_name):
                                                 print(
                                                     "That choice wasn't valid (a valid response would be a valid enemy name or 'back'), please try again.")
                                     else:
-                                        enemy = enemy_party.party[0]
+                                        chosen_enemy = enemy_party.party[0]
                                         print(attack(player, chosen_enemy))
                                         repeat = False
                                         break
                                 elif choice == '?':
-                                    print(attack(player, enemy, True)[0])
+                                    print(attack(player, None, True)[0])
                                 elif choice.lower() == 'back':
                                     break
                                 else:
@@ -349,6 +349,8 @@ def reg_round(player_party, player_name, round_number):
                 exit()
             else:
                 return round_number
+    player_party.equip_items()
+    return round_number
     
 
 
