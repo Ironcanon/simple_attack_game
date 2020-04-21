@@ -66,6 +66,7 @@ class Character():
         self.max_drops = max_drops
         self.effects = []
         self.can_attack = True
+        self.party = None
 
         self.apply_stat_changes(temp_class[3])
 
@@ -206,11 +207,12 @@ class Character():
                     print_str += ", "
             return print_str
 
-    def equip_item(self, new_item):
-        new_item_id = new_item[1]
+    def equip_item(self, new_item_id):
         new_item = items.get(new_item_id)
+        old_item = None
 
-        added_items = [[]]
+        add_item = False
+        replace_item = False
         # Checks if there are any currently equipped items
         if len(self.equipped_items) > 1:
             equipped_item_types = []
@@ -226,10 +228,10 @@ class Character():
                 # Checks whether that item type is unique
                 if new_item_type in items.get("unique_item_types"):
                     # Checks if the same item is already equipped
-                    equipped_item_with_same_type_id = self.equipped_items[-1][equipped_item_types.index(new_item_type)]
-                    equipped_item_with_same_type = items.get(equipped_item_with_same_type_id)
+                    old_item_id = self.equipped_items[-1][equipped_item_types.index(new_item_type)]
+                    old_item = items.get(old_item_id)
 
-                    if equipped_item_with_same_type_id == item_id:
+                    if old_item_id == new_item_id:
                         print(
                             f"{self.name} already has a(n) {new_item[0]}")
                     else:
@@ -238,23 +240,23 @@ class Character():
                             f"As {self.name} already has a(n) {new_item_type} you will have to pick which {new_item_type} to equip")
                         # Gets the str form of the stats of the new items
 
-                        stat_of_cur_item = check_item_stats(equipped_item_with_same_type_id, True)
+                        stat_of_old_item = check_item_stats(old_item_id, True)
                         stat_of_new_item = check_item_stats(new_item_id, True)
                         #  Asks the user to choose which item they want
                         while True:
                             choice = input(
-                                f"Would you like to keep your current {new_item_type} which {stat_of_cur_item} or equip the new item which {stat_of_new_item}? Enter 1 for the current item or 2 for the new item: ")
+                                f"Would you like to keep your current {new_item_type} which {stat_of_old_item} or equip the new item which {stat_of_new_item}? Enter 1 for the current item or 2 for the new item: ")
                             if choice == 1:
                                 # Keeping the current item
                                 break
                             elif choice == 2:
                                 # Choosing the new item
                                 self.equipped_items[-1].pop(
-                                    equipped_item_with_same_type_id)
-                                self.equipped_items.pop(equipped_item_with_same_type[0])
+                                    old_item_id)
+                                self.equipped_items.pop(old_item[0])
 
-                                added_items.append(new_item[0])
-                                added_items[-1].append(new_item_id)
+                                add_item = True
+                                replace_item = True
                             else:
                                 # Invalid choice
                                 print(
@@ -262,38 +264,27 @@ class Character():
                 # Otherwise checks if the amount currently equipped
                 # is less than the max amount allowed
                 elif equipped_item_types.count(new_item_type) < items.get("regular_item_types").get(new_item_type):
-                    added_items.insert(-1, new_item[0])
-                    added_items[-1].append(new_item_id)
+                    add_item = True
                 else:
                     print(
                         f"{self.name} couldn't equip the {new_item[0]} because they already have the max amount they can hold of its type")
             else:
                 # If item type isn't already equipped, adds it to items to be equipped
-                added_items.insert(-1, new_item[0])
-                added_items[-1].append(new_item_id)
+                add_item = True
         else:
-            added_items = [new_item[0], new_item_id]
+            add_item = True
 
-        item_changes = []
-        for i in added_items[-1]:
-            # Gets the stat changes from the newly added items
-            temp_item = items.get(i)
-            if isinstance(temp_item[3], str):
-                item_changes.append(temp_item[3])
-            else:
-                item_changes += temp_item[3]
+        if add_item:
+            stat_changes = new_item[3]
+            if isinstance(stat_changes, str):
+                stat_changes = [stat_changes]
+            self.apply_stat_changes(stat_changes)
 
-        self.apply_stat_changes(item_changes)
-
-        for i in added_items:
-            if isinstance(i, list):
-                for j in i:
-                    if items.get(j)[2] == "once_off_consumable":
-                        added_items.remove(items.get(j)[0])
-                    else:
-                        self.equipped_items[-1].append(j)
-            else:
-                self.equipped_items.insert(-1, i)
+            if new_item[2] != "once_off_consumable":
+                self.equipped_items.insert(-1, new_item[0])
+                self.equipped_items[-1].append(new_item_id)
+        if replace_item:
+            self.party.add_items([old_item[0], [old_item_id]])
 
     def apply_status_effects(self):
         buffs = []
@@ -390,8 +381,11 @@ class Party():
         for char in characters:
             if isinstance(char, list):
                 self.party.extend(char)
+                for cha in char:
+                    cha.party = self
             else:
                 self.party.append(char)
+                char.party = self
 
     def get_party_members_names(self):
         names = []
@@ -405,19 +399,20 @@ class Party():
                 return char
 
     def add_items(self, item_li=[]):
-        self.unequipped_items.extend(item_li[:-1])
+        for item in item_li[:-1]:
+            self.unequipped_items.insert(-1, item)
         self.unequipped_items[-1].extend(item_li[-1])
     
     def equip_items(self):
-        if(self.unequipped_items):
+        if not self.unequipped_items:
             return "No items to equip"
         else:
             repeat = True
-            print("The party has the following items to equip: ")
+            print("The party has the following items to equip: ", end="")
             avalible_items = self.unequipped_items[:-1]
             for i in self.unequipped_items[:-1]:
                 if i == avalible_items[-1]:
-                    print(i, end=". ")
+                    print(i, end=".\n")
                 elif i == avalible_items[-2]:
                     print(i, end=" and ")
                 else:
@@ -426,12 +421,11 @@ class Party():
                 choice = input("Choose an item to equip or enter 'exit' to continue to the next round: ")
                 if choice in avalible_items:
                     item_id = self.unequipped_items[-1][self.unequipped_items.index(choice)]
-                    item = [choice, item_id]
-                    print("The party has the following members: ")
+                    print("The party has the following members: ", end="")
                     party_members = self.get_party_members_names()
                     for i in party_members:
                         if i == party_members[-1]:
-                            print(i, end=". ")
+                            print(i, end=".\n")
                         elif i == party_members[-2]:
                             print(i, end=" and ")
                         else:
@@ -440,13 +434,14 @@ class Party():
                         choice = input("Choose who will equip the item, enter '?' to check the item stats or 'back' to return to the previous choice: ")
                         if choice in party_members:
                             char = self.get_member_from_name(choice)
-                            char.equip_item(item[0], item_id)
+                            char.equip_item(item_id)
+                            break
                         elif choice == '?':
-                            pass
+                            print(check_item_stats(item_id))
                         elif choice.lower() == 'back':
-                            pass
+                            break
                         else:
-                            pass
+                            print("That choice wasn't valid, please try again.")
                 elif choice.lower() == "exit":
                     break
                 else:

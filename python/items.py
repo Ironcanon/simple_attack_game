@@ -53,16 +53,17 @@ def drop_items(possible_drops=[], max_drops=0):
     # adds the items ids
     dropped_items.append(item_ids)
     # Creates a str of the items dropped
-    print_str = ""
-    for i in dropped_items[0:-1]:
-        if i == dropped_items[0:-1][-1]:
-            print_str = print_str + i + ". "
-        elif i == dropped_items[0:-1][-2]:
-            print_str = print_str + i + " and "
-        else:
-            print_str = print_str + i + ", "
+    if len(dropped_items[:-1]):
+        print_str = "The items dropped are: "
+        for i in dropped_items[0:-1]:
+            if i == dropped_items[0:-1][-1]:
+                print_str = print_str + i + ". "
+            elif i == dropped_items[0:-1][-2]:
+                print_str = print_str + i + " and "
+            else:
+                print_str = print_str + i + ", "
     # adds the str at the end
-    dropped_items.append(print_str)
+    print(print_str)
     return dropped_items
 
 
@@ -108,6 +109,8 @@ def check_item_stats(item_id, just_stats=False):
         print_str = f"Item's name is {item[0]}, {item[1]}, its item type is {item[2]} and it "
 
     changes = item[3] 
+    if isinstance(changes, str):
+        changes = [changes]
     length = len(changes)
     loop_num = 1
     

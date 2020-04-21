@@ -201,7 +201,9 @@ def player_turn(enemy_party, player_party, player_name):
                                                     "That choice wasn't valid (a valid response would be a valid enemy name or 'back'), please try again.")
                                     else:
                                         chosen_enemy = enemy_party.party[0]
+                                        print("````````````````````````````")
                                         print(attack(player, chosen_enemy))
+                                        print("````````````````````````````")
                                         repeat = False
                                         break
                                 elif choice == '?':
