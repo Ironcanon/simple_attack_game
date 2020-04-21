@@ -283,6 +283,8 @@ class Character():
             if new_item[2] != "once_off_consumable":
                 self.equipped_items.insert(-1, new_item[0])
                 self.equipped_items[-1].append(new_item_id)
+            self.party.unequipped_items.pop(new_item[0])
+            self.party.unequipped_items[-1].pop(new_item_id)
         if replace_item:
             self.party.add_items([old_item[0], [old_item_id]])
 
