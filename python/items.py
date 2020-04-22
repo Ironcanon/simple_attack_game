@@ -62,6 +62,8 @@ def drop_items(possible_drops=[], max_drops=0):
                 print_str = print_str + i + " and "
             else:
                 print_str = print_str + i + ", "
+    else:
+        print_str=""
     # adds the str at the end
     print(print_str)
     return dropped_items

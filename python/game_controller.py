@@ -111,7 +111,7 @@ def new_game_setup():
         race_choice = input(
             "That choice wasn't valid, please try again. Which race would you like? : ").capitalize()
 
-    print(f"{race_choice}, a good choice! Now to choose a class.")
+    print(f"{race_choice}, a good choice! Now to choose a class.\n")
     print("The avalible classes are: ", end="")
     avalible_classes = get_assignable_classes(True)
     for i in avalible_classes:
@@ -187,11 +187,11 @@ def player_turn(enemy_party, player_party, player_name):
                                                 chosen_enemy = enemy_party.get_member_from_name(
                                                     choice)
                                                 print(
-                                                    "````````````````````````````")
+                                                    "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~", end="")
                                                 print(
                                                     attack(player, chosen_enemy))
                                                 print(
-                                                    "````````````````````````````")
+                                                    "~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                                                 repeat = False
                                                 break
                                             elif choice.lower() == 'back':
@@ -201,9 +201,9 @@ def player_turn(enemy_party, player_party, player_name):
                                                     "That choice wasn't valid (a valid response would be a valid enemy name or 'back'), please try again.")
                                     else:
                                         chosen_enemy = enemy_party.party[0]
-                                        print("````````````````````````````")
+                                        print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~", end="")
                                         print(attack(player, chosen_enemy))
-                                        print("````````````````````````````")
+                                        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                                         repeat = False
                                         break
                                 elif choice == '?':
@@ -297,16 +297,16 @@ def enemy_turn(enemy_party, player_party):
                 attack = get_attack(attack_check)
                 check_str = attack(enemy, current_target, True)
                 if enemy.mana >= check_str[1] and enemy.ammo >= check_str[2]:
-                    print("````````````````````````````")
+                    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                     print(attack(enemy, current_target))
-                    print("````````````````````````````")
+                    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                     break
     return "Enemy party's turn is finished\n"
 
 
 def reg_round(player_party, player_name, round_number):
     boss_round = False
-    print("----------------------------")
+    print("###########################")
     if (round_number + 1) % 5 == 0:
         boss_round = True
         print("A boss has appeared!")
@@ -317,7 +317,9 @@ def reg_round(player_party, player_name, round_number):
     print(enemy_party.get_random_greeting(), end="\n\n")
 
     while enemy_party.get_party_health() > 0:
+        print("----------------------------")
         print(player_turn(enemy_party, player_party, player_name))
+        print("----------------------------", end="\n\n")
         if enemy_party.get_dead_party_members():
             for enemy in enemy_party.get_dead_party_members():
                 print(
@@ -326,7 +328,9 @@ def reg_round(player_party, player_name, round_number):
                 player_party.add_items(items)
             enemy_party.get_dead_party_members().clear()
         else:
+            print("----------------------------")
             print(enemy_turn(enemy_party, player_party))
+            print("----------------------------")
 
         if not player_party.get_party_health() > 0:
             print(f"{player_name}'s party was defeated by the enemy party\n")
@@ -334,7 +338,7 @@ def reg_round(player_party, player_name, round_number):
 
     print(f"Congradulations {player_name} you defeated the enemy party!")
     round_number += 1
-    print("----------------------------")
+    print("###########################")
     if boss_round:
         while True:
             choice = input(
@@ -351,6 +355,7 @@ def reg_round(player_party, player_name, round_number):
                 exit()
             else:
                 return round_number
+    print("")
     player_party.equip_items()
     return round_number
     

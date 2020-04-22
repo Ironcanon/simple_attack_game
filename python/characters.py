@@ -1,5 +1,5 @@
-import random
-import re
+from random import randint
+from collections import Counter
 from items import items, drop_items, check_item_stats
 from races import player_races, enemy_races, get_all_races, get_enemy_races, get_playable_races, is_race_valid
 from classes import classes, get_all_classes, get_assignable_classes, is_class_valid
@@ -283,8 +283,12 @@ class Character():
             if new_item[2] != "once_off_consumable":
                 self.equipped_items.insert(-1, new_item[0])
                 self.equipped_items[-1].append(new_item_id)
-            self.party.unequipped_items.pop(new_item[0])
-            self.party.unequipped_items[-1].pop(new_item_id)
+                print("Item equipped")
+            else:
+                print("Consumable used")
+                
+            self.party.unequipped_items.remove(new_item[0])
+            self.party.unequipped_items[-1].remove(new_item_id)
         if replace_item:
             self.party.add_items([old_item[0], [old_item_id]])
 
@@ -350,7 +354,7 @@ class Character():
 
     def get_random_greeting(self):
         greet_range = len(fight_intro)-1
-        rand_greet = fight_intro[random.randint(0, greet_range)]
+        rand_greet = fight_intro[randint(0, greet_range)]
         greeting = rand_greet[0] + self.name + rand_greet[1]
         return greeting
 
@@ -359,21 +363,22 @@ class Character():
 
     def __str__(self):
         item_str = ""
+        data = Counter(self.equipped_items[:-1])
         if len(self.equipped_items) == 1:
-            item_str = "no"
+            item_str = "None"
         else:
             if len(self.equipped_items[:-1]) == 1:
                 item_str = self.equipped_items[:-1][0]
             else:
-                for i in self.equipped_items[:-1]:
-                    if i == self.equipped_items[:-1][-1]:
-                        item_str = item_str + i
-                    elif i == self.equipped_items[:-1][-2]:
-                        item_str = item_str + i + " and "
+                for item in data.most_common():
+                    if item == data.most_common()[-1]:
+                        item_str = item_str + item[0] + " x" + item[1]
+                    elif item == data.most_common()[-2]:
+                        item_str = item_str + item[0] + " x" + item[1] + " and "
                     else:
-                        item_str = item_str + i + ", "
+                        item_str = item_str + item[0] + " x" + item[1] + ", "
 
-        return f"Character's name is {self.name}, they have {self.health} out of {self.max_health} health, {self.attack} attack, {self.mana} out of {self.max_mana} mana, {self.ammo} out of {self.max_ammo} ammo and has {item_str} item(s)"
+        return f"Character's name is {self.name}, they have {self.health} out of {self.max_health} health, {self.attack} attack, {self.mana} out of {self.max_mana} mana, {self.ammo} out of {self.max_ammo} ammo and has the following item(s): {item_str} "
 
 
 class Party():
@@ -406,48 +411,50 @@ class Party():
         self.unequipped_items[-1].extend(item_li[-1])
     
     def equip_items(self):
-        if not self.unequipped_items:
-            return "No items to equip"
-        else:
-            repeat = True
-            print("The party has the following items to equip: ", end="")
-            avalible_items = self.unequipped_items[:-1]
-            for i in self.unequipped_items[:-1]:
-                if i == avalible_items[-1]:
-                    print(i, end=".\n")
-                elif i == avalible_items[-2]:
-                    print(i, end=" and ")
-                else:
-                    print(i, end=", ")
-            while True:
-                choice = input("Choose an item to equip or enter 'exit' to continue to the next round: ")
-                if choice in avalible_items:
-                    item_id = self.unequipped_items[-1][self.unequipped_items.index(choice)]
-                    print("The party has the following members: ", end="")
-                    party_members = self.get_party_members_names()
-                    for i in party_members:
-                        if i == party_members[-1]:
-                            print(i, end=".\n")
-                        elif i == party_members[-2]:
-                            print(i, end=" and ")
-                        else:
-                            print(i, end=", ")
-                    while repeat:
-                        choice = input("Choose who will equip the item, enter '?' to check the item stats or 'back' to return to the previous choice: ")
-                        if choice in party_members:
-                            char = self.get_member_from_name(choice)
-                            char.equip_item(item_id)
-                            break
-                        elif choice == '?':
-                            print(check_item_stats(item_id))
-                        elif choice.lower() == 'back':
-                            break
-                        else:
-                            print("That choice wasn't valid, please try again.")
-                elif choice.lower() == "exit":
-                    break
-                else:
-                    print("That choice wasn't valid, please try again.")
+        repeat = True
+        while repeat:
+            if not self.unequipped_items:
+                return "No items to equip"
+            else:
+                print("The party has the following items to equip: ", end="")
+                avalible_items = self.unequipped_items[:-1]
+                for i in self.unequipped_items[:-1]:
+                    if i == avalible_items[-1]:
+                        print(i, end=".\n")
+                    elif i == avalible_items[-2]:
+                        print(i, end=" and ")
+                    else:
+                        print(i, end=", ")
+                while repeat:
+                    choice = input("Choose an item to equip or enter 'exit' to continue to the next round: ")
+                    if choice in avalible_items:
+                        item_id = self.unequipped_items[-1][self.unequipped_items.index(choice)]
+                        print("The party has the following members: ", end="")
+                        party_members = self.get_party_members_names()
+                        for i in party_members:
+                            if i == party_members[-1]:
+                                print(i, end=".\n")
+                            elif i == party_members[-2]:
+                                print(i, end=" and ")
+                            else:
+                                print(i, end=", ")
+                        while repeat:
+                            choice = input("Choose who will equip the item, enter '?' to check the item stats or 'back' to return to the previous choice: ")
+                            if choice in party_members:
+                                char = self.get_member_from_name(choice)
+                                char.equip_item(item_id)
+                                break
+                            elif choice == '?':
+                                print(check_item_stats(item_id))
+                            elif choice.lower() == 'back':
+                                break
+                            else:
+                                print("That choice wasn't valid, please try again.")
+                    elif choice.lower() == "exit":
+                        repeat = False
+                        break
+                    else:
+                        print("That choice wasn't valid, please try again.")
 
     def get_party_health(self):
         health = 0
@@ -491,11 +498,11 @@ def get_random_enemy():
     enemy_atributes = []
 
     num_possible_races = len(get_enemy_races())
-    enemy_atributes.append(random.randint(0, num_possible_races-1))
+    enemy_atributes.append(randint(0, num_possible_races-1))
 
     possible_classes = get_assignable_classes()
     num_possible_classes = len(possible_classes)
-    enemy_atributes.append(random.randint(0, num_possible_classes-1))
+    enemy_atributes.append(randint(0, num_possible_classes-1))
 
     temp_enemy = Character(enemy_atributes)
     return temp_enemy
