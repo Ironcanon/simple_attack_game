@@ -1,7 +1,7 @@
 from saves import check_save_name, get_save_names, load_save, save, delete_save
 from classes import get_assignable_classes, is_class_valid
 from races import is_race_valid, get_playable_races
-from characters import Character, get_player, get_random_enemy, get_random_boss, Party, get_enemy_party
+from characters import Character, get_player, get_random_enemy, get_random_boss, Party, get_enemy_party, get_random_player, chance_to_get_new_player
 from attacks import get_attack, attacks, get_available_attacks
 from items import drop_items, get_consumables, use_consumable
 
@@ -339,6 +339,12 @@ def reg_round(player_party, player_name, round_number):
     print(f"Congradulations {player_name} you defeated the enemy party!")
     round_number += 1
     print("###########################")
+
+    if chance_to_get_new_player:
+        new_player = get_random_player()
+        player_party.add_party_member(new_player)
+        print(f"A {new_player.name} has decided to join your party, congradulations!")
+
     if boss_round:
         while True:
             choice = input(

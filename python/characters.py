@@ -22,7 +22,7 @@ status_effects = {
     3: ["strengthened", "their attack will be increased by 5 for the next ", "bd+5", 5]
 }
 
-
+player_names = ["Megrask","Hazel Ambassador","Iandres","Sravia","Tsunami","Peridot","Onyx", "Bronius","Zander","Alessia","Zezo","Nervenu","Kimik","Yudum","Fluw","Gin Lord","Spearmint Lotus","Darling","Yumboo","Billijee","Jerico","Hlee Daus Wang","Thoj Xengxou Wong","Aee Zaj Soung","Maas Chao Tsheej"]
 class Character():
     def __init__(self, atributes=[]):
 
@@ -595,3 +595,25 @@ def get_player(race="", classe=""):
 
         temp_char = Character(player_attributes)
         return temp_char
+
+
+def get_random_player():
+    player_attributes = []
+    
+    num_possible_races = len(get_playable_races())
+    player_attributes.append(randint(0, num_possible_races-1))
+
+    num_possible_classes = len(get_assignable_classes())
+    player_attributes.append(randint(0, num_possible_classes-1))
+    
+    temp_player = Character(player_attributes)
+
+    num_possible_names = len(player_names)
+    temp_player.name = player_names[randint(0,num_possible_names-1)]
+
+    return temp_player
+
+def chance_to_get_new_player(round_num):
+    chance_to_get_new_member = 1 + 1*round_num
+    chance = randint(0,10)
+    return chance < chance_to_get_new_member
