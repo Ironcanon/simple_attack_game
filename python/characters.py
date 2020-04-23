@@ -178,16 +178,16 @@ class Character():
                     change_amount = change[2:]
                     if count == 0:
                         self.bonus_health *= float(change_amount)
-                        self.bonus_health += self.base_health*(1-float(change_amount))
+                        self.bonus_health += self.base_health*(float(change_amount)-1)
                     elif count == 1:
                         self.bonus_attack *= float(change_amount)
-                        self.bonus_attack += self.base_attack*(1-float(change_amount))
+                        self.bonus_attack += self.base_attack*(float(change_amount)-1)
                     elif count == 2:
                         self.bonus_ammo *= float(change_amount)
-                        self.bonus_ammo += self.base_ammo*(1-float(change_amount))
+                        self.bonus_ammo += self.base_ammo*(float(change_amount)-1)
                     elif count == 3:
                         self.bonus_mana *= float(change_amount)
-                        self.bonus_mana += self.base_mana*(1-float(change_amount))
+                        self.bonus_mana += self.base_mana*(float(change_amount)-1)
                         
                 stat_cat[2] = len(stat_cat[0]) + len(stat_cat[1])
 
@@ -305,6 +305,7 @@ class Character():
             add_item = True
 
         if add_item:
+            new_item_type = new_item[2]
             if new_item_type != "consumable":
                 stat_changes = new_item[3]
                 if isinstance(stat_changes, str):
@@ -550,7 +551,8 @@ def get_random_enemy():
     possible_classes = get_assignable_classes()
     num_possible_classes = len(possible_classes)
     enemy_atributes.append(randint(0, num_possible_classes-1))
-
+    if enemy_atributes[1] == 2:
+        pass
     temp_enemy = Character(enemy_atributes)
     return temp_enemy
 
@@ -613,7 +615,8 @@ def get_random_player():
 
     return temp_player
 
-def chance_to_get_new_player(round_num):
-    chance_to_get_new_member = 1 + 1*round_num
+def chance_to_get_new_player(round_num, party_size):
+    chance_to_get_new_member = (1 + 1*round_num)/party_size ** 2
     chance = randint(0,10)
     return chance < chance_to_get_new_member
+    

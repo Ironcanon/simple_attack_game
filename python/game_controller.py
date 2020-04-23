@@ -330,7 +330,7 @@ def reg_round(player_party, player_name, round_number):
         else:
             print("----------------------------")
             print(enemy_turn(enemy_party, player_party))
-            print("----------------------------")
+            print("----------------------------",end="\n\n")
 
         if not player_party.get_party_health() > 0:
             print(f"{player_name}'s party was defeated by the enemy party\n")
@@ -340,10 +340,10 @@ def reg_round(player_party, player_name, round_number):
     round_number += 1
     print("###########################")
 
-    if chance_to_get_new_player:
+    if chance_to_get_new_player(round_number, len(player_party.party)):
         new_player = get_random_player()
         player_party.add_party_member(new_player)
-        print(f"A {new_player.name} has decided to join your party, congradulations!")
+        print(f"\nCongradulations, {new_player.name} has decided to join your party!")
 
     if boss_round:
         while True:
