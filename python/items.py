@@ -119,6 +119,8 @@ def check_item_stats(item_id, just_stats=False):
     for change in changes:
 
         change_type = change[0]
+        if change_type == 'n':
+            continue
         change_opperator = change[1]
         change_amount = change[2:]
 

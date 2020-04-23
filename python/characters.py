@@ -55,12 +55,13 @@ class Character():
         item_drops = list(set(item_drops))
 
         self.name = name
-        self.health, self.max_health = health, health
-        self.attack = attack
-        self.ammo, self.max_ammo = ammo, ammo
-        self.mana, self.max_mana = mana, mana
+        self.base_health, self.health, self.max_health, self.bonus_health= health, health, health, 0
+        self.base_attack, self.attack, self.bonus_attack = attack, attack, 0
+        self.base_ammo, self.ammo, self.max_ammo, self.bonus_ammo = ammo, ammo, ammo, 0
+        self.base_mana, self.mana, self.max_mana, self.bonus_mana = mana, mana, mana, 0
+        self.base_speed, self.speed = speed, speed
+        self.stat_changes = [[[],[],0],[[],[],0],[[],[],0],[[],[],0],[[],[],0]]
         self.attacks = attacks
-        self.speed = speed
         self.item_drops = item_drops
         self.equipped_items = [[]]
         self.max_drops = max_drops
@@ -70,143 +71,172 @@ class Character():
 
         self.apply_stat_changes(temp_class[3])
 
-    def apply_stat_changes(self, changes=[], check=False):
-        if not check:
-            for change in changes:
-                change_type = change[0]
-                if change_type != 'n':
-                    change_opperator = change[1]
-                    change_amount = change[2:]
-
-                    if change_type.upper() == 'H':
-                        if change_type == 'h':
-                            if change_opperator == '+':
-                                self.max_health += float(change_amount)
-                            elif change_opperator == '-':
-                                self.max_health -= float(change_amount)
-                            elif change_opperator == '*':
-                                self.max_health *= float(change_amount)
-                        if change_opperator == '+':
-                            self.health += float(change_amount)
-                        elif change_opperator == '-':
-                            self.health -= float(change_amount)
-                        elif change_opperator == '*':
-                            self.health *= float(change_amount)
-
-                        if self.health > self.max_health:
-                            self.health = self.max_health
-
-                    elif change_type == 'd':
-                        if change_opperator == '+':
-                            self.attack += float(change_amount)
-                        elif change_opperator == '-':
-                            self.attack -= float(change_amount)
-                        elif change_opperator == '*':
-                            self.attack *= float(change_amount)
-
-                    elif change_type.upper() == 'A':
-                        if change_type == 'a':
-                            if change_opperator == '+':
-                                self.max_ammo += float(change_amount)
-                            elif change_opperator == '-':
-                                self.max_ammo -= float(change_amount)
-                            elif change_opperator == '*':
-                                self.max_ammo *= float(change_amount)
-                        if change_opperator == '+':
-                            self.ammo += float(change_amount)
-                        elif change_opperator == '-':
-                            self.ammo -= float(change_amount)
-                        elif change_opperator == '*':
-                            self.ammo *= float(change_amount)
-
-                        if self.ammo > self.max_ammo:
-                            self.ammo = self.max_ammo
-
-                    elif change_type.upper() == 'M':
-                        if change_type == 'm':
-                            if change_opperator == '+':
-                                self.max_mana += float(change_amount)
-                            elif change_opperator == '-':
-                                self.max_mana -= float(change_amount)
-                            elif change_opperator == '*':
-                                self.max_mana *= float(change_amount)
-                        if change_opperator == '+':
-                            self.mana += float(change_amount)
-                        elif change_opperator == '-':
-                            self.mana -= float(change_amount)
-                        elif change_opperator == '*':
-                            self.mana *= float(change_amount)
-
-                        if self.mana > self.max_mana:
-                            self.mana = self.max_mana
-        else:
-            length = len(changes)
-            loop_num = 1
-            print_str = ""
-            for change in changes:
-
-                change_type = change[0]
+    def apply_stat_changes(self, changes=[]):
+        if isinstance(changes, str):
+            changes = [changes]
+        for change in changes:
+            change_type = change[0]
+            if change_type != 'n':
                 change_opperator = change[1]
                 change_amount = change[2:]
-
                 if change_type == 'H':
                     if change_opperator == '+':
-                        print_str += f"increases health by +{change_amount}"
+                        self.health += float(change_amount)
                     elif change_opperator == '-':
-                        print_str += f"decreases health by -{change_amount}"
+                        self.health -= float(change_amount)
                     elif change_opperator == '*':
-                        print_str += f"increases health by *{change_amount}"
-                if change_type == 'h':
-                    if change_opperator == '+':
-                        print_str += f"increases max health by +{change_amount}"
-                    elif change_opperator == '-':
-                        print_str += f"decreases max health by -{change_amount}"
-                    elif change_opperator == '*':
-                        print_str += f"increases max health by *{change_amount}"
+                        self.health *= float(change_amount)
+
+                    if self.health > self.max_health:
+                        self.health = self.max_health
+
+                elif change_type == 'h':
+                    if change_opperator == '*':
+                        self.stat_changes[0][1].append(change)
+                    else:
+                        self.stat_changes[0][0].append(change)
+
                 elif change_type == 'd':
-                    if change_opperator == '+':
-                        print_str += f"increases attack by +{change_amount}"
-                    elif change_opperator == '-':
-                        print_str += f"decreases attack by -{change_amount}"
-                    elif change_opperator == '*':
-                        print_str += f"increases attack by *{change_amount}"
+                    if change_opperator == '*':
+                        self.stat_changes[1][1].append(change)
+                    else:
+                        self.stat_changes[1][0].append(change)
+
                 elif change_type == 'A':
                     if change_opperator == '+':
-                        print_str += f"increases ammo by +{change_amount}"
+                        self.ammo += float(change_amount)
                     elif change_opperator == '-':
-                        print_str += f"decreases ammo by -{change_amount}"
+                        self.ammo -= float(change_amount)
                     elif change_opperator == '*':
-                        print_str += f"increases ammo by *{change_amount}"
+                        self.ammo *= float(change_amount)
+
+                    if self.ammo > self.max_ammo:
+                        self.ammo = self.max_ammo
+
                 elif change_type == 'a':
-                    if change_opperator == '+':
-                        print_str += f"increases max ammo by +{change_amount}"
-                    elif change_opperator == '-':
-                        print_str += f"decreases max ammo by -{change_amount}"
-                    elif change_opperator == '*':
-                        print_str += f"increases max ammo by *{change_amount}"
+                    if change_opperator == '*':
+                        self.stat_changes[2][1].append(change)
+                    else:
+                        self.stat_changes[2][0].append(change)
+                    
                 elif change_type == 'M':
                     if change_opperator == '+':
-                        print_str += f"increases mana by +{change_amount}"
+                        self.mana += float(change_amount)
                     elif change_opperator == '-':
-                        print_str += f"decreases mana by -{change_amount}"
+                        self.mana -= float(change_amount)
                     elif change_opperator == '*':
-                        print_str += f"increases mana by *{change_amount}"
+                        self.mana *= float(change_amount)
+
+                    if self.mana > self.max_mana:
+                        self.mana = self.max_mana
+
                 elif change_type == 'm':
-                    if change_opperator == '+':
-                        print_str += f"increases max mana by +{change_amount}"
-                    elif change_opperator == '-':
-                        print_str += f"decreases max mana by -{change_amount}"
-                    elif change_opperator == '*':
-                        print_str += f"increases max mana by *{change_amount}"
+                    if change_opperator == '*':
+                        self.stat_changes[3][1].append(change)
+                    else:
+                        self.stat_changes[3][0].append(change)
+        
+        for count,stat_cat in enumerate(self.stat_changes):
+            if len(stat_cat[0]) + len(stat_cat[1]) != stat_cat[2]:
+                if count == 0:
+                    old_bonus = self.bonus_health
+                    self.bonus_health = 0
+                elif count == 1:
+                    old_bonus = self.bonus_attack
+                    self.bonus_attack = 0
+                elif count == 2:
+                    old_bonus = self.bonus_ammo
+                    self.bonus_ammo = 0
+                elif count == 3:
+                   old_bonus = self.bonus_mana
+                   self.bonus_mana = 0
 
-                if length - loop_num == 0:
-                    print_str += ". "
-                elif length - loop_num == 1:
-                    print_str += " and "
-                else:
-                    print_str += ", "
-            return print_str
+                for change in stat_cat[0]:
+                    change_opperator = change[1]
+                    change_amount = change[2:]
+                    if count == 0:
+                        if change_opperator == '+':
+                            self.bonus_health += float(change_amount)
+                        elif change_opperator == '-':
+                            self.bonus_health -= float(change_amount)
+                    elif count == 1:
+                        if change_opperator == '+':
+                            self.bonus_attack += float(change_amount)
+                        elif change_opperator == '-':
+                            self.bonus_attack -= float(change_amount)
+                    elif count == 2:
+                        if change_opperator == '+':
+                            self.bonus_ammo += float(change_amount)
+                        elif change_opperator == '-':
+                            self.bonus_ammo -= float(change_amount)
+                    elif count == 3:
+                        if change_opperator == '+':
+                            self.bonus_mana += float(change_amount)
+                        elif change_opperator == '-':
+                            self.bonus_mana -= float(change_amount)
+                for change in stat_cat[1]:
+                    change_amount = change[2:]
+                    if count == 0:
+                        self.bonus_health *= float(change_amount)
+                        self.bonus_health += self.base_health*(1-float(change_amount))
+                    elif count == 1:
+                        self.bonus_attack *= float(change_amount)
+                        self.bonus_attack += self.base_attack*(1-float(change_amount))
+                    elif count == 2:
+                        self.bonus_ammo *= float(change_amount)
+                        self.bonus_ammo += self.base_ammo*(1-float(change_amount))
+                    elif count == 3:
+                        self.bonus_mana *= float(change_amount)
+                        self.bonus_mana += self.base_mana*(1-float(change_amount))
+                        
+                stat_cat[2] = len(stat_cat[0]) + len(stat_cat[1])
 
+                if count == 0:
+                    self.health = self.health - old_bonus + self.bonus_health
+                    if self.health < 0:
+                        self.health = 0
+                        print("Well done, you played yourself")
+                    self.max_health = self.base_health - old_bonus + self.bonus_health
+                    if self.max_health < 0:
+                        self.max_health = 0
+                        print("Okay that's impressive")
+                elif count == 1:
+                    self.attack = self.attack - old_bonus + self.bonus_attack
+                elif count == 2:
+                    self.ammo = self.ammo - old_bonus + self.bonus_ammo
+                    if self.ammo < 0:
+                        self.ammo = 0
+                    self.max_ammo = self.max_ammo - old_bonus + self.bonus_ammo
+                    if self.max_ammo < 0:
+                        self.max_ammo = 0
+                elif count == 3:
+                    self.mana = self.mana - old_bonus + self.bonus_mana
+                    if self.mana < 0:
+                        self.mana = 0
+                    self.max_mana = self.max_mana - old_bonus + self.bonus_mana
+                    if self.max_mana < 0:
+                        self.max_mana = 0
+
+    def swap_stat_change(self, changes=[]):
+        edited_changes = []
+        if isinstance(changes, str):
+            changes = [changes]
+            is_str = True
+        else:
+            is_str = False
+        for change in changes:
+            if change[1] == '+':
+                change = change.replace('+','-')
+            elif change[1] == '-':
+                change = change.replace('-','+')
+            elif change[1] == '*':
+                change = change.replace(change[2:],str(round(1/float(change[2:]),2)))      
+            edited_changes.append(change)
+        if is_str:
+            return edited_changes[0]
+        else:
+            return edited_changes
+    
     def equip_item(self, new_item_id):
         new_item = items.get(new_item_id)
         old_item = None
@@ -275,12 +305,13 @@ class Character():
             add_item = True
 
         if add_item:
-            stat_changes = new_item[3]
-            if isinstance(stat_changes, str):
-                stat_changes = [stat_changes]
-            self.apply_stat_changes(stat_changes)
+            if new_item_type != "consumable":
+                stat_changes = new_item[3]
+                if isinstance(stat_changes, str):
+                    stat_changes = [stat_changes]
+                self.apply_stat_changes(stat_changes)
 
-            if new_item[2] != "once_off_consumable":
+            if new_item_type != "once_off_consumable":
                 self.equipped_items.insert(-1, new_item[0])
                 self.equipped_items[-1].append(new_item_id)
                 print("Item equipped")
@@ -290,6 +321,8 @@ class Character():
             self.party.unequipped_items.remove(new_item[0])
             self.party.unequipped_items[-1].remove(new_item_id)
         if replace_item:
+            inverse_stats = self.swap_stat_change(old_item[3])
+            self.apply_stat_changes(inverse_stats)
             self.party.add_items([old_item[0], [old_item_id]])
 
     def apply_status_effects(self):
@@ -372,11 +405,21 @@ class Character():
             else:
                 for item in data.most_common():
                     if item == data.most_common()[-1]:
-                        item_str = item_str + item[0] + " x" + item[1]
+                        if item[1] == 1:
+                            item_str = item_str + item[0]
+                        else:
+                            item_str = item_str + item[0] + " x" + str(item[1])
                     elif item == data.most_common()[-2]:
-                        item_str = item_str + item[0] + " x" + item[1] + " and "
+                        if item[1] == 1:
+                            item_str = item_str + item[0] + " and "
+                        else:
+                            item_str = item_str + item[0] + " x" + str(item[1]) + " and "
                     else:
-                        item_str = item_str + item[0] + " x" + item[1] + ", "
+                        if item[1] == 1:
+                            item_str = item_str + item[0] + ", "
+                        else:
+                            item_str = item_str + item[0] + " x" + str(item[1]) + ", "
+                        
 
         return f"Character's name is {self.name}, they have {self.health} out of {self.max_health} health, {self.attack} attack, {self.mana} out of {self.max_mana} mana, {self.ammo} out of {self.max_ammo} ammo and has the following item(s): {item_str} "
 
@@ -411,20 +454,22 @@ class Party():
         self.unequipped_items[-1].extend(item_li[-1])
     
     def equip_items(self):
-        repeat = True
-        while repeat:
-            if not self.unequipped_items:
+        continue_loop = True
+        while continue_loop:
+            repeat = True
+            if not self.unequipped_items[:-1]:
                 return "No items to equip"
             else:
-                print("The party has the following items to equip: ", end="")
+                print("\nThe party has the following items to equip: ", end="")
                 avalible_items = self.unequipped_items[:-1]
-                for i in self.unequipped_items[:-1]:
-                    if i == avalible_items[-1]:
-                        print(i, end=".\n")
-                    elif i == avalible_items[-2]:
-                        print(i, end=" and ")
+                for count, item in enumerate(self.unequipped_items[:-1]):
+                    if count == len(avalible_items[-1]):
+                        print(item, end=".")
+                    elif count == len(avalible_items[-1]) -1:
+                        print(item, end=" and ")
                     else:
-                        print(i, end=", ")
+                        print(item, end=", ")
+                print()
                 while repeat:
                     choice = input("Choose an item to equip or enter 'exit' to continue to the next round: ")
                     if choice in avalible_items:
@@ -443,15 +488,17 @@ class Party():
                             if choice in party_members:
                                 char = self.get_member_from_name(choice)
                                 char.equip_item(item_id)
+                                repeat = False
                                 break
                             elif choice == '?':
-                                print(check_item_stats(item_id))
+                                print(check_item_stats(item_id),end="\n\n")
                             elif choice.lower() == 'back':
                                 break
                             else:
                                 print("That choice wasn't valid, please try again.")
                     elif choice.lower() == "exit":
                         repeat = False
+                        continue_loop = False
                         break
                     else:
                         print("That choice wasn't valid, please try again.")

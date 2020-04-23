@@ -148,7 +148,7 @@ def player_turn(enemy_party, player_party, player_name):
             repeat = True
             while repeat:
                 choice = input(
-                    "\nDo you want to attack, use an item, wait or enter '?' to check player stats?: ")
+                    "\nDo you want to attack, use an item, wait or enter '?' to check player stats? : ")
                 if choice.lower() == 'attack':
                     print("The available attacks are: ", end="")
 
@@ -277,7 +277,7 @@ def player_turn(enemy_party, player_party, player_name):
                     print(
                         "That choice wasn't valid (a valid response would be attack, item, wait or ?). Please try again.")
 
-    return f"{player_name}'s party's turn is finished\n"
+    return f"{player_name}'s party's turn is finished"
 
 
 def enemy_turn(enemy_party, player_party):
@@ -301,7 +301,7 @@ def enemy_turn(enemy_party, player_party):
                     print(attack(enemy, current_target))
                     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                     break
-    return "Enemy party's turn is finished\n"
+    return "Enemy party's turn is finished"
 
 
 def reg_round(player_party, player_name, round_number):
