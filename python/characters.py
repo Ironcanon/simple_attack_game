@@ -421,7 +421,6 @@ class Character():
                         else:
                             item_str = item_str + item[0] + " x" + str(item[1]) + ", "
                         
-
         return f"Character's name is {self.name}, they have {self.health} out of {self.max_health} health, {self.attack} attack, {self.mana} out of {self.max_mana} mana, {self.ammo} out of {self.max_ammo} ammo and has the following item(s): {item_str} "
 
 
@@ -541,7 +540,6 @@ class Party():
         for char in self.party:
             print_str += " " + char.name
         return print_str
-
 
 def get_random_enemy():
     enemy_atributes = []
