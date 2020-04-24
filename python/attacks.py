@@ -66,13 +66,15 @@ def attack_dwarf_slam(char, target, check=False):
             target.health -= attack_dmg
             target.health = round(target.health, 1)
             char.mana -= 10
+            if target.health <= 0:
+                target.health = 0
             effect_chance_roll = random.random()
             if effect_chance_roll < effect_chance:
                 target.effects.append(
                     [effect_id, status_effects[effect_id][3]])
-            if target.health <= 0:
-                target.health = 0
-            return(f"\n{char.name} slammed {target.name} for {attack_dmg} damage!\n{target.name} has {target.health} health left.")
+                return f"\n{char.name} slammed {target.name} for {attack_dmg} damage.\n{target.name} was {status_effects[effect_id][0]}!\n{target.name} has {target.health} health left."
+            else:
+                return f"\n{char.name} slammed {target.name} for {attack_dmg} damage.\n{target.name} has {target.health} health left."
         else:
             return(f"\n{char.name} is out of mana so the attack failed!")
     else:
@@ -89,13 +91,15 @@ def attack_imp_blaze(char, target, check=False):
             target.health -= attack_dmg
             target.health = round(target.health, 1)
             char.mana -= 10
+            if target.health <= 0:
+                target.health = 0
             effect_chance_roll = random.random()
             if effect_chance_roll < effect_chance:
                 target.effects.append(
                     [effect_id, status_effects[effect_id][3]])
-            if target.health <= 0:
-                target.health = 0
-            return(f"\n{char.name} burnt {target.name} for {attack_dmg} damage!\n{target.name} has {target.health} health left.")
+                return f"\n{char.name} burnt {target.name} for {attack_dmg} damage!\n{target.name} was {status_effects[effect_id][0]}!\n{target.name} has {target.health} health left."
+            else:
+                return f"\n{char.name} burnt {target.name} for {attack_dmg} damage!\n{target.name} has {target.health} health left."
         else:
             return(f"\n{char.name} is out of mana so the attack failed!")
     else:
