@@ -1,3 +1,4 @@
-python python\game_controller.py
+cd python
+python game_controller.py
 
 pause
