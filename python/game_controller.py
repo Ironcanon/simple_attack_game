@@ -288,7 +288,8 @@ def enemy_turn(enemy_party, player_party):
         if enemy.can_attack:
             enemy.attacks.sort(reverse=True)
             current_target = None
-            for player_char in player_party.party:
+            sorted()
+            for player_char in sorted(player_party.party,key=lambda char: char.health):
                 if player_char.health > 0:
                     current_target = player_char
                     break

@@ -527,6 +527,7 @@ class Party():
         return dead_party_members
 
     def add_party_member(self, char):
+        char.party = self
         self.party.append(char)
 
     def output_save(self):
@@ -603,7 +604,7 @@ def get_random_player():
     player_attributes = []
     
     num_possible_races = len(get_playable_races())
-    player_attributes.append(randint(0, num_possible_races-1))
+    player_attributes.append(randint(100, (100 + num_possible_races-1)))
 
     num_possible_classes = len(get_assignable_classes())
     player_attributes.append(randint(0, num_possible_classes-1))
@@ -616,7 +617,7 @@ def get_random_player():
     return temp_player
 
 def chance_to_get_new_player(round_num, party_size):
-    chance_to_get_new_member = (1 + 1*round_num)/party_size ** 2
+    chance_to_get_new_member = (1 + 1*round_num)/(2 ** (party_size-1))
     chance = randint(0,10)
     return chance < chance_to_get_new_member
     
