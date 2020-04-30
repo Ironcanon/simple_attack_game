@@ -288,7 +288,6 @@ def enemy_turn(enemy_party, player_party):
         if enemy.can_attack:
             enemy.attacks.sort(reverse=True)
             current_target = None
-            sorted()
             for player_char in sorted(player_party.party,key=lambda char: char.health):
                 if player_char.health > 0:
                     current_target = player_char
@@ -321,17 +320,22 @@ def reg_round(player_party, player_name, round_number):
         print("----------------------------")
         print(player_turn(enemy_party, player_party, player_name))
         print("----------------------------", end="\n\n")
-        if enemy_party.get_dead_party_members():
-            for enemy in enemy_party.get_dead_party_members():
+        killed_enemies = enemy_party.get_dead_party_members()
+        if killed_enemies:
+            for enemy in killed_enemies:
                 print(
                     f"The {enemy.name} was defeated!\n")
                 items = drop_items(enemy.item_drops, enemy.max_drops)
                 player_party.add_items(items)
-            enemy_party.get_dead_party_members().clear()
         else:
             print("----------------------------")
             print(enemy_turn(enemy_party, player_party))
             print("----------------------------",end="\n\n")
+            killed_players = player_party.get_dead_party_members()
+            if killed_players:
+                for player in killed_players:
+                    print(
+                        f"{player.name} was defeated!\n")
 
         if not player_party.get_party_health() > 0:
             print(f"{player_name}'s party was defeated by the enemy party\n")

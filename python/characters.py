@@ -427,6 +427,7 @@ class Character():
 class Party():
     def __init__(self, *characters):
         self.party = []
+        self.dead_party_members = []
         self.unequipped_items = [[]]
         for char in characters:
             if isinstance(char, list):
@@ -519,11 +520,13 @@ class Party():
         return greetings
 
     def get_dead_party_members(self):
-        dead_party_members = []
+        recently_dead = []
         for char in self.party:
             if char.health == 0:
-                dead_party_members.append(char)
-        return dead_party_members
+                self.party.remove(char)
+                self.dead_party_members.append(char)
+                recently_dead.append(char)
+        return recently_dead
 
     def add_party_member(self, char):
         char.party = self
