@@ -17,9 +17,9 @@ fight_intro = {
 status_effects = {
     # layout = ["name", "description", effect, duration]
     0: ["stunned", "they will miss this ", "ds", 1],
-    1: ["burnt", "they will take 5 damage at the beginning of their turn for the next ", "dH-5", 5],
+    1: ["burnt", "they will take 5 damage at the beginning of their turn for the next ", "dH-5", 4],
     2: ["refreshed", "they will be cured of all status effects at the beginning of their next ", "bc", 1],
-    3: ["strengthened", "their attack will be increased by 5 for the next ", "bd+5", 5]
+    3: ["strengthened", "their attack will be increased by 5 for the next ", "bd+5", 4]
 }
 
 player_names = ["Megrask","Hazel Ambassador","Iandres","Sravia","Tsunami","Peridot","Onyx", "Bronius","Zander","Alessia","Zezo","Nervenu","Kimik","Yudum","Fluw","Gin Lord","Spearmint Lotus","Darling","Yumboo","Billijee","Jerico","Hlee Daus Wang","Thoj Xengxou Wong","Aee Zaj Soung","Maas Chao Tsheej"]
@@ -421,7 +421,7 @@ class Character():
                         else:
                             item_str = item_str + item[0] + " x" + str(item[1]) + ", "
                         
-        return f"Character's name is {self.name}, they have {self.health} out of {self.max_health} health, {self.attack} attack, {self.mana} out of {self.max_mana} mana, {self.ammo} out of {self.max_ammo} ammo and has the following item(s): {item_str} "
+        return f"Character's name is {self.name}, they have {round(self.health,2)} out of {self.max_health} health, {self.attack} attack, {self.mana} out of {round(self.max_mana,2)} mana, {self.ammo} out of {self.max_ammo} ammo and has the following item(s): {item_str} "
 
 
 class Party():
@@ -431,12 +431,12 @@ class Party():
         self.unequipped_items = [[]]
         for char in characters:
             if isinstance(char, list):
-                self.party.extend(char)
                 for cha in char:
                     cha.party = self
+                self.party.extend(char)
             else:
-                self.party.append(char)
                 char.party = self
+                self.party.append(char)              
 
     def get_party_members_names(self):
         names = []
@@ -616,6 +616,7 @@ def get_random_player():
     temp_player.name = player_names[randint(0,num_possible_names-1)]
 
     return temp_player
+
 
 def chance_to_get_new_player(round_num, party_size):
     chance_to_get_new_member = (1 + 1*round_num)/(2 ** (party_size-1))

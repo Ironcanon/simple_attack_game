@@ -297,7 +297,7 @@ def enemy_turn(enemy_party, player_party):
                 attack = get_attack(attack_check)
                 check_str = attack(enemy, current_target, True)
                 if enemy.mana >= check_str[1] and enemy.ammo >= check_str[2]:
-                    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+                    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~",end="")
                     print(attack(enemy, current_target))
                     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
                     break
@@ -316,7 +316,7 @@ def reg_round(player_party, player_name, round_number):
 
     print(enemy_party.get_random_greeting(), end="\n\n")
 
-    while enemy_party.get_party_health() > 0:
+    while player_party.get_party_health() > 0:
         print("----------------------------")
         print(player_turn(enemy_party, player_party, player_name))
         print("----------------------------", end="\n\n")
@@ -327,6 +327,11 @@ def reg_round(player_party, player_name, round_number):
                     f"The {enemy.name} was defeated!\n")
                 items = drop_items(enemy.item_drops, enemy.max_drops)
                 player_party.add_items(items)
+        if enemy_party.get_party_health() <= 0:
+            print(f"Congradulations {player_name} you defeated the enemy party!")
+            round_number += 1
+            print("###########################")
+            break
         else:
             print("----------------------------")
             print(enemy_turn(enemy_party, player_party))
@@ -337,38 +342,36 @@ def reg_round(player_party, player_name, round_number):
                     print(
                         f"{player.name} was defeated!\n")
 
-        if not player_party.get_party_health() > 0:
-            print(f"{player_name}'s party was defeated by the enemy party\n")
-            return round_number
-
-    print(f"Congradulations {player_name} you defeated the enemy party!")
-    round_number += 1
-    print("###########################")
+        
+    else:
+        print(f"{player_name}'s party was defeated by the enemy party\n")
+        return round_number
 
     if chance_to_get_new_player(round_number, len(player_party.party)):
         new_player = get_random_player()
         player_party.add_party_member(new_player)
         print(f"\nCongradulations, {new_player.name} has decided to join your party!")
 
-    if boss_round:
-        while True:
-            choice = input(
-                "Would you like to save, quit, save and quit or continue? (enter 's' to save, 'q' to quit, 'sq' to save and quit or anything else to continue): ")
-            if choice.lower() == 's':
-                print(save(player_name, player_party, round_number))
-                return round_number
-            elif choice.lower() == 'q':
-                print("Thank you for playing, hope to see you again!")
-                exit()
-            elif choice.lower() == 'sq':
-                print(save(player_name, player_party, round_number))
-                print("Thank you for playing, hope to see you again!")
-                exit()
-            else:
-                return round_number
     print("")
     player_party.equip_items()
-    return round_number
+
+    if boss_round:
+        choice = input(
+            "Would you like to save, quit, save and quit or continue? (enter 's' to save, 'q' to quit, 'sq' to save and quit or anything else to continue): ")
+        if choice.lower() == 's':
+            print(save(player_name, player_party, round_number))
+            return round_number
+        elif choice.lower() == 'q':
+            print("Thank you for playing, hope to see you again!")
+            exit()
+        elif choice.lower() == 'sq':
+            print(save(player_name, player_party, round_number))
+            print("Thank you for playing, hope to see you again!")
+            exit()
+        else:
+            return round_number
+    else:
+        return round_number
     
 
 
