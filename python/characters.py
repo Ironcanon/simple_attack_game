@@ -22,7 +22,7 @@ status_effects = {
     3: ["strengthened", "their attack will be increased by 5 for the next ", "bd+5", 4]
 }
 
-player_names = ["Megrask","Hazel","Iandres","Sravia","Tsunami","Peridot","Onyx", "Bronius","Zander","Alessia","Zezo","Nervenu","Kimik","Yudum","Fluw","Gin Lord","Spearmint Lotus","Darling","Yumboo","Billijee","Jerico","Hlee Daus Wang","Thoj Xengxou Wong","Aee Zaj Soung","Maas Chao Tsheej"]
+player_names = ["Megrask","Hazel","Iandres","Sravia","Tsunami","Peridot","Onyx", "Bronius","Zander","Alessia","Zezo","Nervenu","Kimik","Yudum","Fluw","Gin","Spearmint","Darling","Yumboo","Billijee","Jerico","Hlee Daus","Xengxou","Aee Zaj","Maas Chao","Thoj","Tsheej"]
 class Character():
     def __init__(self, atributes=[]):
 
@@ -48,6 +48,7 @@ class Character():
         temp_class = classes.get(atributes[1], 0)
 
         name = name + " " + temp_class[0]
+        true_name = name
         attacks += temp_class[1]
         attacks = list(set(attacks))
 
@@ -55,6 +56,7 @@ class Character():
         item_drops = list(set(item_drops))
 
         self.name = name
+        self.true_name = true_name
         self.base_health, self.health, self.max_health, self.bonus_health= health, health, health, 0
         self.base_attack, self.attack, self.bonus_attack = attack, attack, 0
         self.base_ammo, self.ammo, self.max_ammo, self.bonus_ammo = ammo, ammo, ammo, 0
@@ -196,7 +198,7 @@ class Character():
                     if self.health < 0:
                         self.health = 0
                         print("Well done, you played yourself")
-                    self.max_health = self.base_health - old_bonus + self.bonus_health
+                    self.max_health = self.base_health + self.bonus_health
                     if self.max_health < 0:
                         self.max_health = 0
                         print("Okay that's impressive")
@@ -206,14 +208,14 @@ class Character():
                     self.ammo = self.ammo - old_bonus + self.bonus_ammo
                     if self.ammo < 0:
                         self.ammo = 0
-                    self.max_ammo = self.max_ammo - old_bonus + self.bonus_ammo
+                    self.max_ammo = self.base_ammo + self.bonus_ammo
                     if self.max_ammo < 0:
                         self.max_ammo = 0
                 elif count == 3:
                     self.mana = self.mana - old_bonus + self.bonus_mana
                     if self.mana < 0:
                         self.mana = 0
-                    self.max_mana = self.max_mana - old_bonus + self.bonus_mana
+                    self.max_mana = self.base_mana + self.bonus_mana
                     if self.max_mana < 0:
                         self.max_mana = 0
 
@@ -421,7 +423,7 @@ class Character():
                         else:
                             item_str = item_str + item[0] + " x" + str(item[1]) + ", "
                         
-        return f"Character's name is {self.name}, they have {round(self.health,2)} out of {self.max_health} health, {self.attack} attack, {self.mana} out of {round(self.max_mana,2)} mana, {self.ammo} out of {self.max_ammo} ammo and has the following item(s): {item_str} "
+        return f"Character's name is {self.name}, they are a(n) {self.true_name}. They have {round(self.health,2)} out of {self.max_health} health, {self.attack} attack, {self.mana} out of {round(self.max_mana,2)} mana, {self.ammo} out of {self.max_ammo} ammo and has the following item(s): {item_str} "
 
 
 class Party():

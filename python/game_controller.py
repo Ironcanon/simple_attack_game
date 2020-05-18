@@ -350,7 +350,7 @@ def reg_round(player_party, player_name, round_number):
     if chance_to_get_new_player(round_number, len(player_party.party)):
         new_player = get_random_player()
         player_party.add_party_member(new_player)
-        print(f"\nCongradulations, {new_player.name} has decided to join your party!")
+        print(f"\nCongradulations, {new_player.name} has decided to join your party!\n{new_player.name} is a {new_player.true_name}.")
 
     print("")
     player_party.equip_items()
