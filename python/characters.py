@@ -22,7 +22,7 @@ status_effects = {
     3: ["strengthened", "their attack will be increased by 5 for the next ", "bd+5", 4]
 }
 
-player_names = ["Megrask","Hazel Ambassador","Iandres","Sravia","Tsunami","Peridot","Onyx", "Bronius","Zander","Alessia","Zezo","Nervenu","Kimik","Yudum","Fluw","Gin Lord","Spearmint Lotus","Darling","Yumboo","Billijee","Jerico","Hlee Daus Wang","Thoj Xengxou Wong","Aee Zaj Soung","Maas Chao Tsheej"]
+player_names = ["Megrask","Hazel","Iandres","Sravia","Tsunami","Peridot","Onyx", "Bronius","Zander","Alessia","Zezo","Nervenu","Kimik","Yudum","Fluw","Gin Lord","Spearmint Lotus","Darling","Yumboo","Billijee","Jerico","Hlee Daus Wang","Thoj Xengxou Wong","Aee Zaj Soung","Maas Chao Tsheej"]
 class Character():
     def __init__(self, atributes=[]):
 
@@ -463,14 +463,30 @@ class Party():
             else:
                 print("\nThe party has the following items to equip: ", end="")
                 avalible_items = self.unequipped_items[:-1]
-                for count, item in enumerate(self.unequipped_items[:-1]):
-                    if count == len(avalible_items[-1]):
-                        print(item, end=".")
-                    elif count == len(avalible_items[-1]) -1:
-                        print(item, end=" and ")
-                    else:
-                        print(item, end=", ")
-                print()
+
+                item_str = ""
+                data = Counter(self.unequipped_items[:-1])
+
+                if len(self.unequipped_items[:-1]) == 1:
+                    item_str = self.unequipped_items[:-1][0]
+                else:
+                    for item in data.most_common():
+                        if item == data.most_common()[-1]:
+                            if item[1] == 1:
+                                item_str = item_str + item[0]
+                            else:
+                                item_str = item_str + item[0] + " x" + str(item[1])
+                        elif item == data.most_common()[-2]:
+                            if item[1] == 1:
+                                item_str = item_str + item[0] + " and "
+                            else:
+                                item_str = item_str + item[0] + " x" + str(item[1]) + " and "
+                        else:
+                            if item[1] == 1:
+                                item_str = item_str + item[0] + ", "
+                            else:
+                                item_str = item_str + item[0] + " x" + str(item[1]) + ", "
+                print(item_str,end="\n\n")
                 while repeat:
                     choice = input("Choose an item to equip or enter 'exit' to continue to the next round: ")
                     if choice in avalible_items:
