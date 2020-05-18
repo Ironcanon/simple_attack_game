@@ -540,7 +540,7 @@ class Party():
     def get_dead_party_members(self):
         recently_dead = []
         for char in self.party:
-            if char.health == 0:
+            if char.health <= 0:
                 self.party.remove(char)
                 self.dead_party_members.append(char)
                 recently_dead.append(char)
@@ -582,7 +582,7 @@ def get_enemy_party(round_num, is_boss_round=False):
         boss = get_random_boss()
         enemy_party = Party(boss)
     else:
-        extra_enemies = round_num // 10
+        extra_enemies = round_num // 5
         enemies = []
         for _ in range(0, 1 + extra_enemies):
             temp_enemy = get_random_enemy()
